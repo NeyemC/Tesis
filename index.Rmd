@@ -1,0 +1,29 @@
+---
+title: 'Meritocracia, cohortes y justificación de la desigualdad en salud y educación en Chile, 1999–2019'
+subtitle: "Tesis para optar al grado de Magíster en Ciencias Sociales con mención en Sociología de la Modernización"
+author: "Neyem Cares"
+date: "`r Sys.Date()`"
+institution: "Universidad de Chile"
+degree: "Magíster en Ciencias Sociales — Facultad de Ciencias Sociales"
+advisor: "Profesor guía: Juan Carlos Castillo"
+bibliography: [tesis.bib]
+biblio-style: apalike
+link-citations: yes
+site: bookdown::bookdown_site
+output: bookdown::gitbook
+documentclass: book
+fontsize: 14pt
+lof: True
+lot: True
+
+---
+
+
+# Resumen {-}
+
+*Pendiente.*
+
+
+# Agradecimientos {-}
+
+*Pendiente.*

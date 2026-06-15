@@ -1,0 +1,19 @@
+# R
+.Rhistory
+.RData
+.Rproj.user/
+*.Rproj.user
+
+# bookdown output
+docs/
+_bookdown_files/
+tesis.log
+tesis.tex
+
+# datos ISSP (no subir a git por tamaño/licencia)
+input/*.sav
+input/*.dta
+input/*.csv
+
+# R datasets procesados (regenerables desde script)
+input/*.rds
