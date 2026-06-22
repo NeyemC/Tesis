@@ -8,6 +8,8 @@ degree: "Magíster en Ciencias Sociales — Facultad de Ciencias Sociales"
 advisor: "Profesor guía: Juan Carlos Castillo"
 bibliography: [tesis.bib]
 biblio-style: apalike
+csl: apa.csl
+lang: es-ES
 link-citations: yes
 site: bookdown::bookdown_site
 output: bookdown::gitbook
