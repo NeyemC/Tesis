@@ -1,9 +1,194 @@
 # Metodología
 
+```{r setup-metod, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE,
+                      out.width = "85%", fig.align = "center")
+suppressMessages({
+  library(dplyr); library(psych); library(survey); library(MASS); library(knitr)
+})
+
+## Carga del dataset pooled (generado por scripts/02_build_data.R)
+dat <- readRDS("input/issp_pooled.rds")
+
+## Submuestra "mecanismo" (olas con baterías ricas)
+md <- dat %>% dplyr::filter(ola %in% c(2009, 2019)) %>%
+  mutate(just_salud_f = factor(just_salud, ordered = TRUE),
+         just_educ_f  = factor(just_educ , ordered = TRUE),
+         mujer = factor(mujer))
+
+wmean <- function(x, w) { ok <- !is.na(x) & !is.na(w); sum(x[ok] * w[ok]) / sum(w[ok]) }
+```
+
+Este estudio utiliza datos de encuestas de actitudes y un diseño de comparación
+entre olas y cohortes. La estrategia analítica privilegia la transparencia sobre
+la sofisticación: dado que se dispone de solo tres mediciones transversales, no
+se intenta una descomposición formal de edad–período–cohorte, sino una
+comparación descriptiva e inferencial cuyos supuestos y límites se explicitan.
+
 ## Datos
 
+Se emplea el módulo **"Social Inequality"** del *International Social Survey
+Programme* (ISSP) aplicado en Chile en sus tres versiones disponibles: **1999,
+2009 y 2019**. Los microdatos provienen del archivo GESIS (estudios ZA3430,
+ZA5400 y ZA7600) y se filtran al submódulo chileno en cada ola. La encuesta de
+2009 corresponde al mismo levantamiento que el estudio CEP de mayo–junio de ese
+año, aplicado en Chile como parte del consorcio ISSP; se utiliza la versión ISSP
+para maximizar la comparabilidad internacional y entre olas.
+
+```{r tab-n-ola}
+n_tab <- dat %>% group_by(Ola = ola) %>%
+  summarise(`N (Chile)` = n(), .groups = "drop")
+kable(n_tab, caption = "Tamaño muestral del submódulo chileno por ola.")
+```
+
+Todos los análisis incorporan el **factor de expansión** provisto por ISSP
+(variable `WEIGHT`), que corrige por probabilidades de selección y ajusta la
+muestra a la población objetivo. Los descriptivos se reportan ponderados y los
+modelos se estiman bajo un diseño muestral con `survey::svydesign()`.
+
+El diseño general sigue una estrategia de **dos niveles**. En el primer nivel se
+describe la **tendencia 1999→2009→2019** de las variables dependientes y de los
+indicadores comparables entre las tres olas. En el segundo nivel se analiza el
+**mecanismo** —la asociación entre adhesión meritocrática, barreras adscriptivas
+y justificación de la desigualdad, y su variación por cohorte— restringido a
+**2009 y 2019**, las dos olas que incluyen la batería detallada de atribuciones
+de éxito. Esta restricción es sustantiva: la batería no existe en 1999, de modo
+que los índices de meritocracia descriptiva y particularismo son estructuralmente
+inobservables en esa ola.
 
 ## Variables
 
+### Variables dependientes
+
+Las dos variables dependientes capturan la **justificación de la desigualdad** en
+dos esferas de bienestar. A los encuestados se les pregunta cuán justo o injusto
+les parece que las personas con mayores ingresos puedan **comprar mejor atención
+de salud** y **mejor educación para sus hijos** que las personas de menores
+ingresos. Ambos ítems están presentes en las tres olas con idéntica redacción y
+escala de cinco puntos. La escala original va de 1 ("muy justo") a 5 ("muy
+injusto"); para facilitar la lectura sustantiva se **invierte** (6 − x), de modo
+que **valores mayores indican mayor justificación** de la desigualdad. Las dos
+variables están fuertemente correlacionadas (r ≈ 0,79 en las olas 2009–2019),
+por lo que el interés no está en sus niveles sino en si sus **predictores**
+difieren por esfera.
+
+### Predictores de interés
+
+```{r alphas, results='hide'}
+items_part <- c("ga_raza","ga_sexo","ga_relig","ga_coimas","ga_polit","ga_familia")
+a09 <- suppressWarnings(psych::alpha(dat %>% filter(ola==2009) %>% dplyr::select(all_of(items_part)))$total$raw_alpha)
+a19 <- suppressWarnings(psych::alpha(dat %>% filter(ola==2019) %>% dplyr::select(all_of(items_part)))$total$raw_alpha)
+```
+
+Se construyen tres indicadores de adhesión a discursos sobre el origen del éxito,
+todos en escala 1–5 e invertidos para que **mayores valores indiquen mayor
+adhesión**:
+
+- **Meritocracia normativa.** Importancia atribuida a los años de educación y
+  formación para fijar la remuneración de una persona. Es el único ítem normativo
+  con redacción comparable en las **tres olas**, por lo que se usa en la
+  descripción longitudinal.
+- **Meritocracia descriptiva.** Promedio de la importancia atribuida a la
+  *educación propia* y al *trabajo duro* para "salir adelante" en la vida. Se
+  reconstruye deliberadamente **sin** el ítem de "ambición" (presente en 2009 pero
+  no en 2019) para garantizar comparabilidad entre ambas olas. Al tratarse de un
+  índice de dos ítems, su consistencia interna es modesta (r = 0,18 en 2009; 0,33
+  en 2019), lo que se considera al interpretar sus coeficientes.
+- **Particularismo / barreras adscriptivas.** Promedio de la importancia
+  atribuida a seis factores de tipo adscriptivo o particularista para salir
+  adelante: raza, sexo, religión, coimas, contactos políticos y origen familiar
+  acomodado. El índice presenta buena fiabilidad
+  (α = `r sprintf("%.2f", a09)` en 2009; α = `r sprintf("%.2f", a19)` en 2019).
+
+La decisión de tratar meritocracia descriptiva y particularismo como dimensiones
+**separadas** —y no como polos de un único continuo— se sustenta en análisis
+factorial exploratorio sobre la batería de atribuciones, donde ambos conjuntos de
+ítems cargan en factores distintos y prácticamente no correlacionados. Por tanto
+no se emplea un índice bipolar mérito–estructura.
+
+### Cohorte de nacimiento
+
+La cohorte se deriva del **año de nacimiento** (aproximado como año de la ola
+menos la edad declarada) y se agrupa en cuatro tramos definidos por la
+**periodización política chilena** del siglo XX, no por categorías genéricas de
+"generación":
+
+```{r tab-cohortes}
+coh_def <- data.frame(
+  Cohorte = c("Desarrollista","Dictadura","Transición","Neoliberal"),
+  `Año de nacimiento` = c("≤ 1958","1959–1973","1974–1990","1991+"),
+  `Contexto de socialización` = c(
+    "Estado de compromiso / ISI, previo al quiebre democrático",
+    "Régimen militar y reformas neoliberales fundacionales",
+    "Juventud durante la recuperación democrática",
+    "Socialización plena en democracia de mercado"),
+  check.names = FALSE)
+kable(coh_def, caption = "Definición de cohortes según periodización política chilena.")
+```
+
+```{r tab-coh-ola}
+ct <- as.data.frame.matrix(table(dat$cohorte, dat$ola))
+ct <- cbind(Cohorte = rownames(ct), ct); rownames(ct) <- NULL
+kable(ct, caption = "Distribución de casos por cohorte y ola (sin ponderar).")
+```
+
+Como muestra la distribución, las cohortes más jóvenes solo se pueblan en las
+olas recientes: la cohorte neoliberal está ausente en 1999, apenas representada en
+2009 (n = 32) y bien representada recién en 2019 (n = 211). Esta asimetría se
+considera explícitamente al interpretar las interacciones cohorte × ola y
+constituye una limitación reconocida del diseño.
+
+> **Nota sobre identificación edad–período–cohorte (APC).** Dado que edad =
+> período − cohorte, los tres componentes no son separables linealmente con solo
+> tres olas. Este estudio **no** estima un modelo APC formal: compara cohortes
+> entre momentos asumiendo el problema de identificación, y por ello las
+> diferencias entre cohortes deben leerse como diferencias netas que pueden
+> confundir efectos de edad y de período.
+
+### Controles
+
+Los modelos incorporan como controles la **escolaridad** (años de educación
+formal), el **sexo** (mujer = 1) y la **religiosidad** (frecuencia de asistencia
+a servicios religiosos, recodificada de modo que mayores valores indican mayor
+religiosidad). El **ingreso** y la **posición política** (izquierda–derecha) se
+exploran solo como análisis de robustez: ambos presentan altísimas tasas de no
+respuesta en Chile (la autoubicación política supera el 75 % de valores perdidos),
+lo que reduciría drásticamente la *N* analítica si se incluyeran en el modelo
+principal.
+
+### Tratamiento de los valores perdidos
+
+Los códigos de no respuesta se armonizan a `NA` en todas las olas (la ola de 1999
+codifica los perdidos como 8/9 y las olas posteriores como valores negativos).
+Los modelos se estiman por **eliminación por lista** (*listwise*); se reporta la
+*N* efectiva de cada modelo y la caída respecto de la muestra bruta.
 
 ## Métodos
+
+Las dos variables dependientes son **ordinales** (cinco categorías ordenadas de
+menor a mayor justificación). En consecuencia, los modelos se estiman mediante
+**regresión logística ordinal de razones proporcionales** (*ordered logit*),
+ponderada por el factor de expansión mediante `survey::svyolr()`. Los
+coeficientes se interpretan como *odds ratios* (OR): un OR mayor que 1 indica que
+un aumento en el predictor se asocia a mayor probabilidad de ubicarse en
+categorías superiores de justificación.
+
+Todos los predictores continuos se **estandarizan** (media 0, desviación 1) sobre
+la muestra analítica, de modo que sus coeficientes son comparables en magnitud y
+expresan el cambio asociado a una desviación estándar. Para cada variable
+dependiente se estiman dos especificaciones:
+
+1. **Modelo base:** meritocracia descriptiva, particularismo, escolaridad,
+   religiosidad, sexo, cohorte y ola.
+2. **Modelo con interacción:** se añade el término **meritocracia descriptiva ×
+   cohorte**, que evalúa la hipótesis central de que la fuerza del discurso
+   meritocrático sobre la justificación de la desigualdad **varía según la cohorte
+   de socialización**.
+
+La interpretación de la interacción se apoya en el cálculo del **efecto marginal**
+(pendiente) de la meritocracia descriptiva dentro de cada cohorte. Como pruebas de
+robustez se reestiman los modelos con y sin los controles de alta no respuesta
+(ingreso, posición política), con y sin ponderador, y tratando las variables
+dependientes como continuas. Todo el procesamiento y la estimación se realizan en
+**R** (paquetes `haven`, `dplyr`, `survey`, `psych`, `MASS` y `ggplot2`); los
+scripts de construcción del dataset y de análisis acompañan a este documento.
