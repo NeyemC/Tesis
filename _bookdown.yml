@@ -1,10 +1,16 @@
 book_filename: "tesis"
 repo: https://github.com/NeyemC/Tesis
+rmd_files:
+  - index.Rmd
+  - 01-intro.Rmd
+  - 02-antecedentes.Rmd
+  - 03-metod.Rmd
+  - 04-analisis.Rmd
+  - 05-conclusiones.Rmd
+  - 06-biblio.Rmd
 language:
   label:
     fig: 'Figura '
     tab: 'Tabla '
-#  ui:
-#    chapter_name: " "
 delete_merged_file: true
 output_dir: "docs"
