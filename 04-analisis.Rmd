@@ -27,13 +27,13 @@ tidy_olr <- function(m){
 }
 ```
 
-Los resultados se presentan en dos planos. Primero, una descripción de las
+El capítulo organiza los resultados en dos planos. El primero describe las
 **tendencias** de la justificación de la desigualdad y de la adhesión meritocrática
-a lo largo de las tres olas (1999–2019). Segundo, el análisis del **mecanismo**:
+a lo largo de las tres olas (1999–2019). El segundo analiza el **mecanismo**:
 qué factores predicen la justificación de la desigualdad en salud y educación, y
 si la fuerza del discurso meritocrático varía según la cohorte de socialización.
-Siguiendo la convención de reportar primero el dato y luego su interpretación,
-cada tabla precede a su lectura sustantiva.
+Cada tabla precede a su lectura sustantiva, siguiendo la convención de reportar
+primero el dato y luego su interpretación.
 
 ## Análisis descriptivo
 
@@ -65,8 +65,8 @@ ggplot(df_fig, aes(ola, media, color=Esfera, group=Esfera)) +
 
 La justificación de la desigualdad describe una trayectoria en **forma de U** en
 ambas esferas: cae de manera marcada entre 1999 (≈ 2,7) y 2009 (≈ 2,3) y vuelve a
-ascender hacia 2019 (≈ 2,5). El punto más bajo coincide con la ola de 2009 —tras
-una década de crecimiento económico sostenido— y el repunte se observa en la
+ascender hacia 2019 (≈ 2,5). El punto más bajo coincide con la ola de 2009, tras
+una década de crecimiento económico sostenido, y el repunte se observa en la
 medición de 2019, levantada en el período inmediatamente previo al estallido
 social de octubre de ese año. Los niveles de salud y educación son prácticamente
 indistinguibles entre sí en cada ola, lo que confirma que el interés analítico no
@@ -131,22 +131,20 @@ kable(tab_base, row.names=FALSE,
       caption=sprintf("Modelos base de regresión logística ordinal ponderada. Olas 2009–2019. N≈%d (salud) / %d (educación). OR; ref. cohorte = Desarrollista. Significancia: *** p<.001, ** p<.01, * p<.05, . p<.10.", S$N, E$N))
 ```
 
-Tres resultados destacan del modelo base, consistentes en **ambas esferas**:
-
-- El **particularismo** es el predictor más robusto: a mayor reconocimiento de
-  barreras adscriptivas (raza, sexo, religión, coimas, contactos, origen familiar)
-  como vías para salir adelante, **mayor** justificación de la desigualdad
-  (OR ≈ 1,23–1,24; p < 0,001). Es un resultado **contraintuitivo** —se esperaría
-  que reconocer barreras erosionara la legitimación— y exige interpretación
-  teórica: posiblemente refleja una visión resignada o naturalizada de un orden
-  social percibido como inevitablemente jerárquico, antes que un juicio normativo
-  favorable a esa jerarquía.
-- La **escolaridad** opera en la misma dirección: más años de educación se asocian
-  a **mayor** justificación (OR ≈ 1,20; p < 0,001), en línea con la literatura que
-  vincula el logro educativo con la internalización de marcos meritocráticos.
-- La **meritocracia descriptiva**, como efecto principal, **no** alcanza
-  significancia en el modelo base, anticipando que su efecto no es uniforme sino
-  condicional a la cohorte.
+Tres resultados sobresalen del modelo base y son consistentes en ambas esferas.
+El **particularismo** es el predictor más robusto: a mayor reconocimiento de
+barreras adscriptivas como vías para salir adelante, mayor justificación de la
+desigualdad (OR ≈ 1,23–1,24; p < 0,001). Se trata de un resultado contraintuitivo,
+pues cabría esperar que reconocer esas barreras erosionara la legitimación; más
+bien parece reflejar una visión resignada o naturalizada de un orden social
+percibido como inevitablemente jerárquico, antes que un juicio normativo favorable
+a esa jerarquía. La **escolaridad** opera en el mismo sentido: más años de
+educación se asocian a mayor justificación (OR ≈ 1,20; p < 0,001), en línea con
+la literatura que vincula el logro educativo con la internalización de marcos
+meritocráticos [@castilloPerceptionsInequalityMeritocracy2025]. La **meritocracia
+descriptiva**, en cambio, no alcanza significancia como efecto principal, lo que
+anticipa que su acción no es uniforme sino condicional a la cohorte de
+socialización.
 
 Las **cohortes** más jóvenes tienden a justificar **menos** que la desarrollista
 (con efectos más nítidos en educación), y la **ola 2009** muestra menor
@@ -202,18 +200,15 @@ ggplot(sl, aes(cohorte, est)) +
 
 El término de interacción confirma la hipótesis central, aunque de manera
 **asimétrica entre esferas**. En **salud**, el efecto de la meritocracia
-descriptiva **cambia de signo** a través de las cohortes: es **negativo** y
-significativo en la cohorte desarrollista (coef. ≈ −0,21; p < 0,01) —donde más
-adhesión meritocrática se asocia, paradójicamente, a *menor* justificación— y se
-torna **positivo** en la cohorte de dictadura (interacción ≈ +0,24; p < 0,05),
-revirtiendo el sentido del efecto. La figura anterior visualiza esta inversión:
+descriptiva **cambia de signo** a través de las cohortes: es **negativo** y significativo en la cohorte desarrollista (coef. ≈ −0,21;
+p < 0,01), donde mayor adhesión meritocrática se asocia paradójicamente a *menor*
+justificación, y se torna **positivo** en la cohorte de dictadura
+(interacción ≈ +0,24; p < 0,05), revirtiendo el sentido del efecto. La figura anterior visualiza esta inversión:
 la pendiente cruza el cero entre la cohorte más antigua y las socializadas bajo el
 régimen militar y la transición.
 
 En **educación**, los coeficientes de interacción apuntan en la **misma
-dirección** pero **no** alcanzan significancia estadística. Esta asimetría
-sectorial —el mecanismo opera en salud pero no en educación— es en sí misma un
-hallazgo a interpretar: sugiere que la desigualdad en salud, percibida como más
+dirección** pero **no** alcanzan significancia estadística. Esta asimetría sectorial es en sí misma un hallazgo a interpretar: sugiere que la desigualdad en salud, percibida como más
 directamente ligada a la vida y la urgencia, activa de modo distinto los marcos
 meritocráticos según la generación, mientras que la desigualdad educativa, objeto
 de un debate público más consolidado en Chile, responde a una lógica más
@@ -224,7 +219,6 @@ la desigualdad en Chile se explica de forma robusta por el reconocimiento
 naturalizado de barreras adscriptivas y por el logro educativo, mientras que el
 discurso meritocrático *descriptivo* opera como un mecanismo **dependiente de la
 cohorte**, cuya dirección se invierte entre quienes se socializaron antes del
-quiebre democrático y quienes lo hicieron bajo la dictadura y la transición. La
-fragilidad de algunas estimaciones —significancia marginal, asimetría entre
-esferas, baja consistencia del índice descriptivo— se reconoce abiertamente y
-orienta la discusión hacia la necesidad de replicación con más olas.
+quiebre democrático y quienes lo hicieron bajo la dictadura y la transición. La fragilidad de algunas estimaciones (significancia marginal, asimetría entre
+esferas, baja consistencia interna del índice descriptivo) se reconoce
+abiertamente y orienta la discusión hacia la necesidad de replicación con más olas.

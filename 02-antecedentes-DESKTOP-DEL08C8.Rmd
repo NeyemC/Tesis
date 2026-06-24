@@ -1,0 +1,61 @@
+
+```{r echo=FALSE}
+knitr::opts_chunk$set(out.width="80%", fig.pos = "!ht", out.extra = "")
+```
+
+# Antecedentes conceptuales y empíricos {#antecedentes}
+
+<!-- Marco teórico integrado con antecedentes empíricos (no secciones separadas) -->
+<!-- Anclas teóricas: Castillo (meritocracia y justificación en Chile), Sandel (tiranía del mérito), Mannheim (socialización política / cohortes) -->
+
+## Justificación de la desigualdad
+
+<!-- Explanandum: bajo qué condiciones se percibe como justa una distribución desigual -->
+<!-- Salud y educación como dominios de bienes distribuidos desigualmente en Chile -->
+
+## Discursos meritocráticos
+
+<!-- Distinción entre meritocracia normativa (cómo debería funcionar) y descriptiva (cómo funciona) -->
+<!-- Particularismo / barreras adscriptivas como dimensión independiente (no polo opuesto del mérito) -->
+<!-- Resultado factorial 2009: correlación entre factores ≈ 0.14, dimensiones separadas -->
+
+### Meritocracia normativa
+
+<!-- Batería "importance for pay": educación/formación para fijar salario -->
+<!-- Comparable en las tres olas solo vía ítem educación -->
+
+### Meritocracia descriptiva
+
+<!-- Batería "getting ahead": educación propia + trabajo duro (sin ambición para comparabilidad 2009–2019) -->
+<!-- Solo disponible en 2009 y 2019 -->
+
+### Particularismo y barreras adscriptivas
+
+<!-- Getting ahead: raza + sexo + religión + coimas + contactos políticos -->
+<!-- Predictor más fuerte en análisis exploratorio 2009 (r≈0.11, OR≈1.22) -->
+<!-- Efecto contraintuitivo: más reconocimiento de barreras → más justificación de la desigualdad -->
+
+## Cohortes de nacimiento y socialización política
+
+<!-- Mannheim: experiencias formativas compartidas modulan disposiciones valorativas -->
+<!-- Problema APC: con 3 olas no se separan limpiamente edad, período y cohorte -->
+<!-- Decisión: comparación de cohortes entre momentos, reconociendo la limitación -->
+
+### Periodización chilena
+
+<!-- Cortes basados en hitos históricos chilenos, NO en categorías de "Estado de Bienestar" -->
+
+| Cohorte | Nacimiento | Contexto de socialización |
+|---|---|---|
+| Desarrollista | hasta ~1958 | Estado de compromiso / ISI, previo al quiebre |
+| Dictadura | ~1959–1973 | Régimen militar y reformas neoliberales |
+| Transición | ~1974–1990 | Recuperación democrática |
+| Neoliberal consolidado | ~1991+ | Democracia de mercado plena |
+
+<!-- Nota: cohortes jóvenes solo bien representadas en olas recientes (1991+ tenía ~17 casos en 2009) -->
+
+## Hipótesis
+
+<!-- H1: Las cohortes más jóvenes justifican menos la desigualdad que las más antiguas (gradiente generacional) -->
+<!-- H2: El efecto de la meritocracia descriptiva sobre la justificación varía según cohorte -->
+<!-- H3: El patrón de interacción meritocracia × cohorte se transforma entre 2009 y 2019 -->

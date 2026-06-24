@@ -1,0 +1,17 @@
+# Introducción {#intro}
+
+<!-- Contexto: desigualdad en Chile y su justificación -->
+
+<!-- Mecanismo: discurso meritocrático como legitimador -->
+
+<!-- Vacío: variación por cohorte de nacimiento no estudiada -->
+
+**Pregunta de investigación:** ¿Cómo varía el efecto de los discursos meritocráticos sobre la justificación de la desigualdad en salud y educación según la cohorte de nacimiento en Chile, y cómo se transforma esa variación entre 1999, 2009 y 2019?
+
+**Argumento central:** El efecto de la adhesión a discursos meritocráticos sobre la justificación de la desigualdad en salud y educación no es uniforme: varía según la cohorte de nacimiento, y esa variación se transforma entre olas, sugiriendo que el contexto histórico de socialización modula la fuerza del discurso meritocrático como mecanismo de legitimación.
+
+**Datos:** ISSP "Social Inequality" (1999, 2009, 2019), módulo aplicado en Chile (N ≈ 1.400–1.500 por ola).
+
+<!-- Foco temporal: comparación rica 2009 vs. 2019; 1999 como referencia descriptiva -->
+
+<!-- Estructura del artículo -->

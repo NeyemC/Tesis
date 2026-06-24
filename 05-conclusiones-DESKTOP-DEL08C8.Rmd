@@ -1,0 +1,27 @@
+# Conclusiones {#conclusiones}
+
+## Síntesis de hallazgos
+
+<!-- Dos historias a integrar: -->
+<!-- (a) meritocracia moderada por cohorte: efecto varía y el signo se invierte entre generaciones -->
+<!-- (b) particularismo + escolaridad: relación robusta, ambos sectores, pero contraintuitiva -->
+
+## Implicancias teóricas
+
+<!-- Gradiente generacional: cohortes jóvenes justifican menos la desigualdad -->
+<!-- Socialización histórica como modulador del discurso meritocrático -->
+<!-- Efecto contraintuitivo del particularismo: interpretación teórica necesaria -->
+
+## Limitaciones
+
+<!-- Problema APC: con 3 olas no se separan limpiamente edad, período y cohorte -->
+<!-- Cohortes jóvenes solo bien representadas en olas recientes -->
+<!-- Interacción meritocracia × cohorte frágil (p=0.039/0.048 en exploración 2009) -->
+<!-- Pseudo-R² bajos: normal en actitudes, reportar honestamente -->
+<!-- Asimetría salud vs. educación: pendiente de explicación teórica -->
+
+## Agenda futura
+
+<!-- Replicar con datos de otras olas o países ISSP -->
+<!-- Modelamiento APC formal si se dispone de más olas -->
+<!-- Profundizar mecanismo del particularismo contraintuitivo -->

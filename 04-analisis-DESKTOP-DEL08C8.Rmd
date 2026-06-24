@@ -1,0 +1,62 @@
+# Análisis {#analisis}
+
+```{r include=FALSE}
+knitr::opts_chunk$set(out.width = '80%', fig.pos = "H")
+```
+
+```{r setup-analisis, include=FALSE}
+# Cargar datos procesados
+# datos <- readRDS("input/datos_pooled.rds")
+```
+
+## Nivel 1: Tendencia general 1999–2009–2019
+
+<!-- Descriptivos de VD y meritocracia normativa por ola (las tres olas) -->
+<!-- Tabla descriptiva general (N, media, SD por ola y cohorte) -->
+
+### Evolución de la justificación de la desigualdad
+
+<!-- Gráfico: niveles medios de just_salud y just_educ por ola -->
+
+### Evolución de la meritocracia normativa
+
+<!-- Único predictor comparable en las tres olas (ítem educación) -->
+<!-- Verificar wording exacto del ítem entre olas antes de interpretar como serie temporal -->
+
+## Nivel 2: Mecanismo (2009 y 2019)
+
+### Estructura factorial y verificación de invarianza
+
+<!-- EFA / CFA batería getting-ahead en 2009 y 2019 -->
+<!-- ¿Se replican los dos factores (mérito / particularismo)? -->
+<!-- Invarianza de medición entre olas (lavaan) -->
+<!-- Alpha de Cronbach por índice y por ola -->
+
+### Análisis descriptivo por cohorte
+
+<!-- Niveles de índices y VD por cohorte y ola -->
+<!-- Nota: cohorte 1991+ muy pequeña en 2009 (~17 casos); reconocer en interpretación -->
+
+## Modelos de regresión
+
+### Modelo base
+
+<!-- Ordered logit: VD ~ cohorte + ola + controles -->
+<!-- Reportar N por modelo y caída listwise -->
+<!-- Pseudo-R² (~0.012 exploratoriamente); reportar sin maquillar -->
+
+### Modelo con interacción meritocracia × cohorte
+
+<!-- VD ~ meritocracia_descriptiva * cohorte + particularismo + controles + ola -->
+<!-- Resultado exploratorio (2009): interacción significativa para salud (p<0.05), no para educación -->
+<!-- Signo se invierte entre cohortes: Desarrollista (−) → Dictadura (+) → Transición (+) -->
+
+### Comparación 2009 vs. 2019
+
+<!-- ¿Se replica y/o transforma el patrón de interacción entre olas? -->
+<!-- Modelo estratificado por ola o interacción triple cohorte × meritocracia × ola -->
+
+## Efectos marginales y predicciones
+
+<!-- Gráficos de efectos marginales por cohorte (marginaleffects / ggeffects) -->
+<!-- Interpretar asimetría sectorial: salud vs. educación -->

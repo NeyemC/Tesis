@@ -1,0 +1,62 @@
+# Metodología {#metodologia}
+
+```{r include=FALSE}
+knitr::opts_chunk$set(out.width = '80%', fig.pos = "H")
+```
+
+## Datos
+
+<!-- ISSP "Social Inequality", módulo aplicado en Chile, tres olas -->
+<!-- Fuente: GESIS. Archivos .sav leídos con haven::read_sav() -->
+
+| Ola | Archivo GESIS | Variable país | Código Chile | N Chile |
+|---|---|---|---|---|
+| 1999 | `ZA3430_2006-09-14.sav` | `V3` | 30 ("RCH Chile") | 1.503 |
+| 2009 | `ZA5400_v4-0-0.sav` | `V5` | 152 ("CL-Chile") | 1.505 |
+| 2019 | `ZA7600_v3-0-0.sav` | `c_alphan` | "CL" | 1.374 |
+
+<!-- Dataset integrado: pooled long, una fila por persona, variable ola (1999/2009/2019) -->
+<!-- Armonización de perdidos: 2009 usa 8/9; 2019 usa -8/-9 → ambos recodificados a NA -->
+<!-- Ponderador ISSP incorporado en todos los modelos -->
+
+## Variables
+
+### Variables dependientes
+
+<!-- Escala 1 ("muy justo") a 5 ("muy injusto") → invertida para que mayor = más justifica -->
+
+| Concepto | 1999 | 2009 | 2019 |
+|---|---|---|---|
+| Justificación desigualdad en salud | `V39` | `V38` | `v30` |
+| Justificación desigualdad en educación | `V40` | `V39` | `v31` |
+
+### Variables independientes: índices meritocráticos
+
+<!-- Tres índices separados (escala 1–5, mayor = más adhesión) -->
+<!-- Justificación factorial: KMO=0.78, Bartlett sig., correlación entre factores ≈ 0.14 → NO índice bipolar -->
+
+1. **Meritocracia normativa** — batería "importance for pay", ítem educación (`V50`/`V48`/`v45`). Alpha ≈ 0.71. Comparable en las tres olas.
+2. **Meritocracia descriptiva** — getting ahead: educación propia + trabajo duro (sin ambición para comparabilidad 2009–2019). Solo 2009 y 2019.
+3. **Particularismo** — getting ahead: raza + sexo + religión + coimas + contactos políticos. Solo 2009 y 2019.
+
+### Cohortes de nacimiento
+
+<!-- Variable construida: año_nacimiento = año_ola − AGE -->
+<!-- Cuatro categorías (referencia: Desarrollista) -->
+
+### Variables de control
+
+<!-- Sexo, escolaridad (años), ingreso, posición política (izq–der), religiosidad (asistencia) -->
+<!-- Ingreso y posición política: ~20–25% NA → modelos con y sin estos controles (análisis de robustez) -->
+
+## Estrategia analítica
+
+<!-- Diseño Camino B (preferido): dos niveles -->
+<!-- Nivel 1: tendencia general 1999→2009→2019 en VD + meritocracia normativa (las tres olas) -->
+<!-- Nivel 2: mecanismo (particularismo + meritocracia descriptiva × cohorte) en 2009 y 2019 -->
+
+<!-- Modelos: ordered logit (MASS::polr / ordinal::clm) con ponderador (survey::svyolr) -->
+<!-- Secuencia: modelo base → + interacción meritocracia × cohorte → estratificado por ola -->
+<!-- Efectos marginales e interpretación gráfica: marginaleffects / ggeffects -->
+<!-- Tablas: modelsummary / gtsummary -->
+<!-- Robustez: con/sin ingreso y posición política; VD como lineal vs ordinal; con/sin ponderador -->

@@ -4,7 +4,11 @@
 knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE,
                       out.width = "85%", fig.align = "center")
 suppressMessages({
-  library(dplyr); library(psych); library(survey); library(MASS); library(knitr)
+  library(dplyr)
+  library(psych)
+  library(survey)
+  library(MASS)
+  library(knitr)
 })
 
 ## Carga del dataset pooled (generado por scripts/02_build_data.R)
@@ -16,7 +20,10 @@ md <- dat %>% dplyr::filter(ola %in% c(2009, 2019)) %>%
          just_educ_f  = factor(just_educ , ordered = TRUE),
          mujer = factor(mujer))
 
-wmean <- function(x, w) { ok <- !is.na(x) & !is.na(w); sum(x[ok] * w[ok]) / sum(w[ok]) }
+wmean <- function(x, w) {
+  ok <- !is.na(x) & !is.na(w)
+  sum(x[ok] * w[ok]) / sum(w[ok])
+}
 ```
 
 Este estudio utiliza datos de encuestas de actitudes y un diseño de comparación
@@ -48,10 +55,9 @@ modelos se estiman bajo un diseño muestral con `survey::svydesign()`.
 
 El diseño general sigue una estrategia de **dos niveles**. En el primer nivel se
 describe la **tendencia 1999→2009→2019** de las variables dependientes y de los
-indicadores comparables entre las tres olas. En el segundo nivel se analiza el
-**mecanismo** —la asociación entre adhesión meritocrática, barreras adscriptivas
-y justificación de la desigualdad, y su variación por cohorte— restringido a
-**2009 y 2019**, las dos olas que incluyen la batería detallada de atribuciones
+indicadores comparables entre las tres olas. En el segundo nivel se analiza el **mecanismo**, centrado en la asociación entre
+adhesión meritocrática, barreras adscriptivas y justificación de la desigualdad
+y en su variación por cohorte, restringido a **2009 y 2019**, las dos olas que incluyen la batería detallada de atribuciones
 de éxito. Esta restricción es sustantiva: la batería no existe en 1999, de modo
 que los índices de meritocracia descriptiva y particularismo son estructuralmente
 inobservables en esa ola.
@@ -75,9 +81,17 @@ difieren por esfera.
 ### Predictores de interés
 
 ```{r alphas, results='hide'}
-items_part <- c("ga_raza","ga_sexo","ga_relig","ga_coimas","ga_polit","ga_familia")
-a09 <- suppressWarnings(psych::alpha(dat %>% filter(ola==2009) %>% dplyr::select(all_of(items_part)))$total$raw_alpha)
-a19 <- suppressWarnings(psych::alpha(dat %>% filter(ola==2019) %>% dplyr::select(all_of(items_part)))$total$raw_alpha)
+items_part <- c("ga_raza", "ga_sexo", "ga_relig", "ga_coimas", "ga_polit", "ga_familia")
+a09 <- suppressWarnings(
+  psych::alpha(
+    dat %>% filter(ola == 2009) %>% dplyr::select(all_of(items_part))
+  )$total$raw_alpha
+)
+a19 <- suppressWarnings(
+  psych::alpha(
+    dat %>% filter(ola == 2019) %>% dplyr::select(all_of(items_part))
+  )$total$raw_alpha
+)
 ```
 
 Se construyen tres indicadores de adhesión a discursos sobre el origen del éxito,
@@ -101,7 +115,7 @@ adhesión**:
   (α = `r sprintf("%.2f", a09)` en 2009; α = `r sprintf("%.2f", a19)` en 2019).
 
 La decisión de tratar meritocracia descriptiva y particularismo como dimensiones
-**separadas** —y no como polos de un único continuo— se sustenta en análisis
+**separadas**, y no como polos de un único continuo, se sustenta en análisis
 factorial exploratorio sobre la batería de atribuciones, donde ambos conjuntos de
 ítems cargan en factores distintos y prácticamente no correlacionados. Por tanto
 no se emplea un índice bipolar mérito–estructura.
@@ -128,7 +142,8 @@ kable(coh_def, caption = "Definición de cohortes según periodización polític
 
 ```{r tab-coh-ola}
 ct <- as.data.frame.matrix(table(dat$cohorte, dat$ola))
-ct <- cbind(Cohorte = rownames(ct), ct); rownames(ct) <- NULL
+ct <- cbind(Cohorte = rownames(ct), ct)
+rownames(ct) <- NULL
 kable(ct, caption = "Distribución de casos por cohorte y ola (sin ponderar).")
 ```
 
