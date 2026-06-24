@@ -4,8 +4,7 @@
 .Rproj.user/
 *.Rproj.user
 
-# bookdown output
-docs/
+# bookdown output (docs/ debe estar en git para GitHub Pages)
 _bookdown_files/
 tesis.log
 tesis.tex
