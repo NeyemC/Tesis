@@ -7,7 +7,7 @@ tab:tab-coh-vd
 tab:tab-base
 tab:tab-int
 fig:fig-int
-introducción
+intro
 antecedentes-conceptuales-y-empíricos
 el-caso-chileno-desigualdad-persistente-y-segmentación-de-los-servicios-sociales
 los-momentos-de-medición-tres-coyunturas-del-modelo
