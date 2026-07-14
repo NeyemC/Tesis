@@ -13,6 +13,7 @@ suppressMessages({
 
 ## Carga del dataset pooled (generado por scripts/02_build_data.R)
 dat <- readRDS("input/issp_pooled.rds")
+if (!"z_edad" %in% names(dat)) dat$z_edad <- as.numeric(scale(dat$edad))
 
 ## Submuestra "mecanismo" (olas con baterías ricas)
 md <- dat %>% dplyr::filter(ola %in% c(2009, 2019)) %>%
@@ -56,7 +57,7 @@ modelos se estiman bajo un diseño muestral con `survey::svydesign()`.
 El diseño general sigue una estrategia de **dos niveles**. En el primer nivel se
 describe la **tendencia 1999→2009→2019** de las variables dependientes y de los
 indicadores comparables entre las tres olas. En el segundo nivel se analiza el **mecanismo**, centrado en la asociación entre
-adhesión meritocrática, barreras adscriptivas y justificación de la desigualdad
+meritocracia normativa, meritocracia descriptiva, particularismo y justificación de la desigualdad,
 y en su variación por cohorte, restringido a **2009 y 2019**, las dos olas que incluyen la batería detallada de atribuciones
 de éxito. Esta restricción es sustantiva: la batería no existe en 1999, de modo
 que los índices de meritocracia descriptiva y particularismo son estructuralmente
@@ -106,12 +107,19 @@ adhesión**:
   *educación propia* y al *trabajo duro* para "salir adelante" en la vida. Se
   reconstruye deliberadamente **sin** el ítem de "ambición" (presente en 2009 pero
   no en 2019) para garantizar comparabilidad entre ambas olas. Al tratarse de un
-  índice de dos ítems, su consistencia interna es modesta (r = 0,18 en 2009; 0,33
-  en 2019), lo que se considera al interpretar sus coeficientes.
-- **Particularismo / barreras adscriptivas.** Promedio de la importancia
-  atribuida a seis factores de tipo adscriptivo o particularista para salir
-  adelante: raza, sexo, religión, coimas, contactos políticos y origen familiar
-  acomodado. El índice presenta buena fiabilidad
+  índice de dos ítems, su consistencia interna es baja en 2009 (r = 0,18) y
+  apenas modesta en 2019 (r = 0,33). Esta es una **limitación relevante**: la
+  baja correlación entre ítems impide asegurar que el índice capture de manera
+  estable una única dimensión de percepción meritocrática, lo que introduce
+  incertidumbre sobre qué está midiendo exactamente y puede atenuar o volver
+  inestables sus efectos estimados. A ello se añade que la batería de
+  atribuciones no existe en la ola de 1999, de modo que la meritocracia
+  descriptiva no es observable en el primer período y la comparación temporal
+  queda restringida a las olas de 2009 y 2019. Ambas limitaciones se consideran
+  explícitamente al interpretar los resultados relativos a H1 y H3.
+- **Particularismo.** Promedio de la importancia atribuida a seis factores de
+  tipo adscriptivo para salir adelante: raza, sexo, religión, coimas, contactos
+  políticos y origen familiar acomodado. El índice presenta buena fiabilidad
   (α = `r sprintf("%.2f", a09)` en 2009; α = `r sprintf("%.2f", a19)` en 2019).
 
 La decisión de tratar meritocracia descriptiva y particularismo como dimensiones
@@ -153,23 +161,46 @@ olas recientes: la cohorte neoliberal está ausente en 1999, apenas representada
 considera explícitamente al interpretar las interacciones cohorte × ola y
 constituye una limitación reconocida del diseño.
 
-> **Nota sobre identificación edad–período–cohorte (APC).** Dado que edad =
-> período − cohorte, los tres componentes no son separables linealmente con solo
-> tres olas. Este estudio **no** estima un modelo APC formal: compara cohortes
-> entre momentos asumiendo el problema de identificación, y por ello las
-> diferencias entre cohortes deben leerse como diferencias netas que pueden
-> confundir efectos de edad y de período.
+> **Nota sobre identificación edad–período–cohorte (APC).** Dado que
+> edad = período − cohorte, los tres componentes no son separables linealmente
+> con solo tres olas. Este estudio **no** estima un modelo APC formal. La edad
+> se incluye como covariable continua para controlar efectos de ciclo de vida,
+> pero con cohorte categórica y ola como factor en el mismo modelo, la
+> separación completa de los tres componentes sigue siendo imposible. Las
+> diferencias entre cohortes deben leerse, por tanto, como diferencias netas
+> en las que persiste cierta confusión residual entre efectos generacionales y
+> efectos de período.
 
 ### Controles
 
-Los modelos incorporan como controles la **escolaridad** (años de educación
-formal), el **sexo** (mujer = 1) y la **religiosidad** (frecuencia de asistencia
-a servicios religiosos, recodificada de modo que mayores valores indican mayor
-religiosidad). El **ingreso** y la **posición política** (izquierda–derecha) se
-exploran solo como análisis de robustez: ambos presentan altísimas tasas de no
-respuesta en Chile (la autoubicación política supera el 75 % de valores perdidos),
-lo que reduciría drásticamente la *N* analítica si se incluyeran en el modelo
-principal.
+Los modelos incorporan como controles la **edad** (en años, estandarizada),
+la **escolaridad** (años de educación formal, tratada como variable continua),
+el **sexo** (mujer = 1) y la **religiosidad** (frecuencia de asistencia a
+servicios religiosos, recodificada de modo que mayores valores indican mayor
+religiosidad). La edad se incluye como control continuo para aislar efectos de
+ciclo de vida de los efectos de socialización generacional: aunque no resuelve
+el problema de identificación APC, su inclusión permite al menos separar el
+envejecimiento individual de la impronta del contexto histórico en que cada
+cohorte fue socializada.
+
+La operacionalización de la escolaridad como variable continua en años implica
+asumir que cada año adicional de educación tiene el mismo efecto independiente
+del nivel educativo del que se parte, supuesto cuestionable desde el punto de
+vista sociológico: la diferencia entre completar la enseñanza básica y la media,
+o entre la media y la educación superior, difícilmente es equiparable a un año
+extra de escolaridad en cualquier tramo. Esta decisión se adopta por razones de
+disponibilidad del dato armonizado entre olas y de comparabilidad con la
+literatura existente, y se reconoce como una limitación que futuras
+investigaciones deberían abordar mediante una operacionalización por nivel
+educativo alcanzado.
+
+La **posición política** (autoubicación izquierda–derecha) presenta una tasa de
+no respuesta superior al 75 % en Chile, lo que hace inviable incluirla
+directamente en el modelo principal sin una pérdida drástica de casos. Se opta
+por recodificarla mediante imputación de la media y una variable indicadora de
+no respuesta (*missing dummy*), estrategia que preserva la muestra completa y se
+aplica en los modelos de robustez; los resultados principales no cambian
+sustantivamente con su inclusión.
 
 ### Tratamiento de los valores perdidos
 
@@ -193,7 +224,7 @@ la muestra analítica, de modo que sus coeficientes son comparables en magnitud 
 expresan el cambio asociado a una desviación estándar. Para cada variable
 dependiente se estiman dos especificaciones:
 
-1. **Modelo base:** meritocracia descriptiva, particularismo, escolaridad,
+1. **Modelo base:** meritocracia descriptiva, particularismo, edad, escolaridad,
    religiosidad, sexo, cohorte y ola.
 2. **Modelo con interacción:** se añade el término **meritocracia descriptiva ×
    cohorte**, que evalúa la hipótesis central de que la fuerza del discurso

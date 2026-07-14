@@ -9,6 +9,7 @@ suppressMessages({
 
 ## Reaseguro: cargar objetos si el capítulo se compila de forma aislada
 if (!exists("dat")) dat <- readRDS("input/issp_pooled.rds")
+if (!"z_edad" %in% names(dat)) dat$z_edad <- as.numeric(scale(dat$edad))
 if (!exists("wmean")) wmean <- function(x, w){ ok <- !is.na(x)&!is.na(w); sum(x[ok]*w[ok])/sum(w[ok]) }
 if (!exists("md")) {
   md <- dat %>% dplyr::filter(ola %in% c(2009,2019)) %>%
@@ -91,17 +92,17 @@ jóvenes; en **2019**, ese gradiente se aplana e incluso se invierte parcialment
 las cohortes socializadas en dictadura y transición justifican algo más que la
 desarrollista. El patrón generacional, por tanto, no es fijo: se transforma entre
 olas, lo que sugiere que el contexto histórico modula la relación entre cohorte y
-legitimación de la desigualdad.
+justificación de la desigualdad.
 
 ## Modelos
 
 ```{r fit-models, results='hide'}
 fit_pair <- function(dvf){
   d <- md %>% dplyr::filter(!is.na(.data[[dvf]]), !is.na(z_merit_desc), !is.na(z_particular),
-                            !is.na(z_educ), !is.na(z_relig), !is.na(mujer), !is.na(cohorte))
+                            !is.na(z_edad), !is.na(z_educ), !is.na(z_relig), !is.na(mujer), !is.na(cohorte))
   des <- svydesign(ids=~1, weights=~weight, data=d)
-  f0 <- as.formula(paste(dvf,"~ z_merit_desc + z_particular + z_educ + z_relig + mujer + cohorte + ola_f"))
-  f1 <- as.formula(paste(dvf,"~ z_merit_desc*cohorte + z_particular + z_educ + z_relig + mujer + ola_f"))
+  f0 <- as.formula(paste(dvf,"~ z_merit_desc + z_particular + z_edad + z_educ + z_relig + mujer + cohorte + ola_f"))
+  f1 <- as.formula(paste(dvf,"~ z_merit_desc*cohorte + z_particular + z_edad + z_educ + z_relig + mujer + ola_f"))
   list(m0=svyolr(f0,design=des), m1=svyolr(f1,design=des), N=nrow(d))
 }
 S <- fit_pair("just_salud_f")   # salud
@@ -109,6 +110,7 @@ E <- fit_pair("just_educ_f")    # educación
 
 lab <- c(z_merit_desc="Meritocracia descriptiva (z)",
          z_particular="Particularismo (z)",
+         z_edad="Edad (z)",
          z_educ="Escolaridad, años (z)",
          z_relig="Religiosidad (z)",
          mujer1="Mujer",
@@ -141,10 +143,13 @@ percibido como inevitablemente jerárquico, antes que un juicio normativo favora
 a esa jerarquía. La **escolaridad** opera en el mismo sentido: más años de
 educación se asocian a mayor justificación (OR ≈ 1,20; p < 0,001), en línea con
 la literatura que vincula el logro educativo con la internalización de marcos
-meritocráticos [@castilloPerceptionsInequalityMeritocracy2025]. La **meritocracia
-descriptiva**, en cambio, no alcanza significancia como efecto principal, lo que
-anticipa que su acción no es uniforme sino condicional a la cohorte de
-socialización.
+meritocráticos [@castilloPerceptionsInequalityMeritocracy2025]. La **edad**
+muestra un efecto marginal en salud (OR ≈ 1,22; p < 0,10): a mayor edad, mayor
+tendencia a justificar la desigualdad sanitaria, lo que sugiere cierta aceptación
+del orden existente vinculada al ciclo de vida, aunque el resultado no alcanza
+el umbral convencional de significancia. La **meritocracia descriptiva**, en
+cambio, no alcanza significancia como efecto principal, lo que anticipa que su
+acción no es uniforme sino condicional a la cohorte de socialización.
 
 Las **cohortes** más jóvenes tienden a justificar **menos** que la desarrollista
 (con efectos más nítidos en educación), y la **ola 2009** muestra menor
@@ -213,6 +218,55 @@ directamente ligada a la vida y la urgencia, activa de modo distinto los marcos
 meritocráticos según la generación, mientras que la desigualdad educativa, objeto
 de un debate público más consolidado en Chile, responde a una lógica más
 homogénea entre cohortes.
+
+Para complementar la interpretación de los *odds ratios*, la figura siguiente
+traduce los coeficientes del modelo de interacción en **probabilidades predichas**
+de ubicarse en las categorías altas de justificación (≥ 4) en función del nivel
+de meritocracia descriptiva, manteniendo el resto de los predictores en sus
+medias estandarizadas.
+
+```{r fig-pred-prob, fig.cap="Probabilidad predicha de alta justificación de la desigualdad en salud (categorías ≥ 4) según meritocracia descriptiva y cohorte. Predictores de control fijados en sus medias.", fig.height=3.6}
+b_s  <- coef(S$m1)
+z_s  <- S$m1$zeta
+
+pred_p <- function(z_merit, cohorte) {
+  xb <- b_s["z_merit_desc"] * z_merit
+  if (cohorte == "Dictadura")
+    xb <- xb + b_s["cohorteDictadura"]  + b_s["z_merit_desc:cohorteDictadura"]  * z_merit
+  if (cohorte == "Transicion")
+    xb <- xb + b_s["cohorteTransicion"] + b_s["z_merit_desc:cohorteTransicion"] * z_merit
+  if (cohorte == "Neoliberal")
+    xb <- xb + b_s["cohorteNeoliberal"] + b_s["z_merit_desc:cohorteNeoliberal"] * z_merit
+  1 - plogis(z_s["3|4"] - xb)
+}
+
+merit_seq <- seq(-1.5, 1.5, by = 0.1)
+cohs_ord  <- c("Desarrollista","Dictadura","Transicion","Neoliberal")
+df_pp <- do.call(rbind, lapply(cohs_ord, function(coh)
+  data.frame(z_merit_desc = merit_seq, cohorte = coh,
+             prob = sapply(merit_seq, pred_p, cohorte = coh))))
+df_pp$cohorte <- factor(df_pp$cohorte, levels = cohs_ord,
+  labels = c("Desarrollista","Dictadura","Transición","Neoliberal"))
+
+ggplot(df_pp, aes(z_merit_desc, prob, color = cohorte, linetype = cohorte)) +
+  geom_line(linewidth = 0.9) +
+  scale_color_manual(values = c("#2166ac","#d6604d","#4dac26","#762a83")) +
+  labs(x = "Meritocracia descriptiva (z)",
+       y = "P(justificación salud ≥ 4)", color = "Cohorte", linetype = "Cohorte") +
+  theme_minimal(base_size = 11) + theme(legend.position = "bottom")
+```
+
+La figura evidencia con claridad la **inversión del efecto** entre cohortes. En
+la cohorte desarrollista, mayor meritocracia descriptiva se asocia a una
+*menor* probabilidad de alta justificación: pasar de −1 a +1 desviación estándar
+reduce esa probabilidad en aproximadamente 4 puntos porcentuales. En la cohorte
+de dictadura, el efecto se invierte: la misma variación en meritocracia descriptiva
+*aumenta* la probabilidad de alta justificación en cerca de 3 puntos. Las cohortes
+de transición y neoliberal muestran pendientes positivas similares a la de
+dictadura, aunque con mayor incertidumbre dado su menor tamaño muestral en las
+olas disponibles. Esta representación en probabilidades hace visible la magnitud
+sustantiva de la interacción, que en términos de *odds ratios* podría parecer
+modesta.
 
 En conjunto, los modelos sostienen una lectura **integrada**: la justificación de
 la desigualdad en Chile se explica de forma robusta por el reconocimiento

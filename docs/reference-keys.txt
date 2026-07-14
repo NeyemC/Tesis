@@ -7,6 +7,8 @@ tab:tab-coh-vd
 tab:tab-base
 tab:tab-int
 fig:fig-int
+fig:fig-pred-prob
+tab:tabla-hipotesis
 intro
 antecedentes-conceptuales-y-empíricos
 el-caso-chileno-desigualdad-persistente-y-segmentación-de-los-servicios-sociales
@@ -29,3 +31,9 @@ análisis-descriptivo
 modelos
 la-meritocracia-descriptiva-como-mecanismo-moderado-por-cohorte
 conclusiones
+síntesis-de-resultados-por-hipótesis
+contribuciones
+limitaciones
+agenda-futura
+robustez-de-los-resultados
+tabla-de-síntesis

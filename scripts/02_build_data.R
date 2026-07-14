@@ -115,7 +115,8 @@ dat <- dat %>% mutate(
   z_merit_norm = zscore(merit_norm_educ),
   z_educ       = zscore(educ_anios),
   z_relig      = zscore(religiosidad),
-  z_party      = zscore(party_lr)
+  z_party      = zscore(party_lr),
+  z_edad       = zscore(edad)
 )
 
 # --- Guardar -------------------------------------------------------
