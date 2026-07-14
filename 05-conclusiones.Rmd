@@ -47,7 +47,7 @@ de la meritocracia descriptiva sobre la justificación en salud cambia de signo
 entre la cohorte desarrollista (negativo) y la de dictadura (positivo,
 significativo). Sin embargo, la diferencia más pronunciada no se observa en la
 cohorte neoliberal sino entre la desarrollista y las socializadas bajo el régimen
-militar, lo que sugiere que el quiebre de 1973 y la instalación del modelo de
+militar, lo que sugiere que el golpe de 1973 y la instalación del modelo de
 mercado son el punto de inflexión generacional más relevante. Las cohortes de
 transición y neoliberal muestran coeficientes en la misma dirección que la de
 dictadura, pero sin alcanzar significancia estadística, posiblemente por el menor
@@ -130,7 +130,7 @@ precisión las percepciones sobre el mérito individual y distinguirlas de las
 percepciones sobre las oportunidades estructurales. La segunda es la extensión
 del diseño a más olas del ISSP u otras fuentes longitudinales, que permitan
 separar con mayor rigor los efectos de edad, período y cohorte y examinar si el
-quiebre generacional en torno al año 1973 se mantiene o se desplaza a medida
+punto de inflexión generacional en torno al golpe de 1973 se mantiene o se desplaza a medida
 que las cohortes más jóvenes ganan peso en la estructura etaria del país. La
 tercera es el análisis comparado del mecanismo en otros países de América Latina
 con trayectorias institucionales distintas, para determinar en qué medida los
@@ -175,7 +175,7 @@ tab_h <- data.frame(
   Dirección = c(
     "Condicional a cohorte",
     "Positiva (contraintuitiva)",
-    "Parcial; quiebre en 1973, no en cohorte neoliberal",
+    "Parcial; golpe de 1973 como punto de inflexión, no cohorte neoliberal",
     "Confirmada"
   ),
   Soporte = c(
