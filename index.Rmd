@@ -23,38 +23,32 @@ lot: True
 
 # Resumen {-}
 
-¿Por qué las personas consideran legítima la desigualdad en sociedades altamente
-desiguales? Este estudio examina el papel de los discursos meritocráticos como
-mecanismo de justificación de la desigualdad en salud y educación en Chile, y si
-ese efecto varía según la cohorte de nacimiento y se transforma entre 1999, 2009
-y 2019. El argumento central es que la adhesión a la meritocracia descriptiva no
-opera de manera uniforme: su efecto sobre la justificación de la desigualdad
-depende del contexto histórico en que cada generación fue socializada, y esa
-dependencia se expresa de forma diferenciada entre esferas de bienestar.
+Este estudio examina si los discursos meritocráticos predicen la justificación
+de la desigualdad en salud y educación en Chile, y si ese efecto varía según la
+cohorte de nacimiento. El argumento central es que la meritocracia descriptiva
+no opera de manera uniforme: su efecto depende del contexto histórico de
+socialización de cada generación y se expresa de forma diferenciada según la
+esfera de bienestar.
 
 Se utilizan datos del módulo "Social Inequality" del *International Social Survey
-Programme* (ISSP) aplicado en Chile en tres olas (N total ≈ 4.400), analizados
-mediante regresión logística ordinal ponderada con interacciones cohorte × mérito
-descriptivo. Las cohortes se definen por la periodización política chilena
-(desarrollista, dictadura, transición y neoliberal), y las variables dependientes
-capturan la justificación de la desigualdad en el acceso a salud y educación.
+Programme* (ISSP) en Chile, tres olas: 1999, 2009 y 2019 (N ≈ 4.400). Los
+modelos son regresiones logísticas ordinales ponderadas con interacciones cohorte
+× meritocracia descriptiva. Las cohortes se definen por la periodización política
+chilena: desarrollista, dictadura, transición y neoliberal.
 
-Los principales resultados muestran que el particularismo —la percepción de que
-para surgir importan los contactos, el origen familiar y factores adscriptivos—
-es el predictor más robusto de la justificación de la desigualdad en ambas
-esferas (OR ≈ 1,23–1,24; p < 0,001), con independencia de la cohorte. La
-meritocracia descriptiva, en cambio, opera de modo condicional: su efecto cambia
-de signo entre la cohorte desarrollista, donde mayor adhesión meritocrática se
-asocia a *menor* justificación, y la cohorte socializada bajo la dictadura, donde
-se asocia a *mayor* justificación (interacción p < 0,05). Esta moderación
-generacional es significativa para la desigualdad en salud pero no para la
-educativa, lo que sugiere que la urgencia vital asociada a la salud activa de
-modo más directo las disposiciones generacionales.
+Los resultados muestran que el particularismo —percepción de que los contactos,
+el origen familiar y factores adscriptivos determinan el éxito— es el predictor
+más robusto de la justificación en ambas esferas (OR ≈ 1,23–1,24; p < 0,001).
+La meritocracia descriptiva opera de modo condicional: su efecto cambia de signo
+entre la cohorte desarrollista, donde se asocia a *menor* justificación, y la
+cohorte de dictadura, donde se asocia a *mayor* justificación (p < 0,05). Esta
+moderación generacional es significativa en salud pero no en educación, lo que
+sugiere que la urgencia vital de la salud activa más directamente las
+disposiciones generacionales.
 
-El estudio contribuye a la literatura al documentar la variación generacional del
-efecto legitimador de la meritocracia en dos esferas sectoriales específicas, e
-identifica en el quiebre de 1973 el principal punto de inflexión en las
-orientaciones hacia la desigualdad en Chile.
+El estudio documenta la variación generacional del efecto legitimador de la
+meritocracia en esferas sectoriales específicas e identifica el quiebre de 1973
+como principal punto de inflexión generacional en Chile.
 
 **Palabras clave:** meritocracia, justificación de la desigualdad, cohortes,
 socialización, Chile, ISSP.
