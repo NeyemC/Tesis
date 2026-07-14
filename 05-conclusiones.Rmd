@@ -21,9 +21,10 @@ la justificación de la desigualdad no es uniforme entre cohortes. Sin embargo,
 una vez introducida la interacción con la cohorte de nacimiento, el efecto
 principal resulta negativo y significativo para la cohorte desarrollista (coef.
 ≈ −0,21; p < 0,01), y se invierte de signo en las cohortes socializadas bajo la
-dictadura (interacción ≈ +0,24; p < 0,05). H1 se sostiene, por tanto, solo para
-las cohortes más jóvenes y con una dirección que depende del contexto de
-socialización. La meritocracia normativa, disponible en las tres olas, muestra
+dictadura (interacción ≈ +0,24; p < 0,05). H1 se sostiene para la cohorte socializada bajo la dictadura, donde la
+dirección del efecto es la esperada; en la cohorte desarrollista opera en
+sentido contrario, y en las cohortes de transición y neoliberal la interacción
+no alcanza significancia estadística. La meritocracia normativa, disponible en las tres olas, muestra
 una asociación positiva con la justificación en la descripción longitudinal,
 aunque no fue incluida en los modelos de mecanismo por restricciones de
 comparabilidad.
