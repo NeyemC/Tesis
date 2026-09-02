@@ -50,6 +50,7 @@
 .title-slide .remark-slide-number, .inverse .remark-slide-number { display: none; }
 
 .title-slide p, .inverse p { color: #e6eef5; }
+.title-slide strong, .inverse strong { color: var(--orange); }
 
 a, a:visited { color: var(--orange); text-decoration: none; }
 
