@@ -1,0 +1,73 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Merriweather:wght@700&display=swap');
+
+:root {
+  --blue: #1b6ca8;
+  --blue-dark: #123a5c;
+  --orange: #c44601;
+  --ink: #1a1a1a;
+  --paper: #fdfdfb;
+}
+
+.remark-slide-content {
+  font-family: 'Lato', 'Segoe UI', sans-serif;
+  font-size: 24px;
+  color: var(--ink);
+  background-color: var(--paper);
+  padding: 1.2em 3em 1em 3em;
+}
+
+.remark-slide-content h1 {
+  font-family: 'Merriweather', Georgia, serif;
+  color: var(--blue);
+  font-size: 1.7em;
+  border-bottom: 4px solid var(--orange);
+  padding-bottom: 0.15em;
+  margin-top: 0;
+}
+
+.remark-slide-content h2 {
+  font-family: 'Merriweather', Georgia, serif;
+  color: var(--blue);
+  font-size: 1.25em;
+}
+
+.remark-slide-content h3 { color: var(--orange); font-size: 1.05em; }
+
+.remark-slide-content strong { color: var(--blue-dark); }
+
+.remark-slide-number { color: #999; font-size: 0.7em; }
+
+/* Title / section dividers */
+.title-slide, .inverse {
+  background-color: var(--blue-dark);
+  color: white;
+}
+.title-slide h1, .title-slide h2, .title-slide h3,
+.inverse h1, .inverse h2, .inverse h3 {
+  color: white;
+  border-color: var(--orange);
+}
+.title-slide .remark-slide-number, .inverse .remark-slide-number { display: none; }
+
+.title-slide p, .inverse p { color: #e6eef5; }
+
+a, a:visited { color: var(--orange); text-decoration: none; }
+
+table { font-size: 0.8em; }
+thead tr { background-color: var(--blue); color: white; }
+
+.small { font-size: 0.78em; }
+.tiny { font-size: 0.62em; color: #555; }
+.center2 { text-align: center; }
+.right2 { text-align: right; }
+
+.footnote-src { position: absolute; bottom: 0.6em; right: 1.2em; font-size: 0.55em; color: #888; }
+
+.hyp-box {
+  border-left: 5px solid var(--orange);
+  background: #f4f7fa;
+  padding: 0.5em 1em;
+  margin: 0.5em 0;
+}
+
+.logos img { height: 60px; margin: 0 12px; vertical-align: middle; }

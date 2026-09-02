@@ -1,0 +1,481 @@
+---
+title: "Meritocracia, cohortes y justificación de la desigualdad"
+subtitle: "en salud y educación en Chile, 1999–2019"
+author: "Neyem Cares"
+institute: "Magíster en Ciencias Sociales, mención Sociología de la Modernización — FACSO, Universidad de Chile"
+date: "Profesor guía: Juan Carlos Castillo"
+output:
+  xaringan::moon_reader:
+    css: ["default", "default-fonts", "custom.css"]
+    nature:
+      ratio: "16:9"
+      highlightStyle: github
+      countIncrementalSlides: false
+      slideNumberFormat: "%current% / %total%"
+    seal: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE,
+                       fig.align = "center", dpi = 150)
+suppressMessages({
+  library(dplyr); library(tidyr); library(ggplot2)
+  library(survey); library(MASS); library(knitr); library(kableExtra)
+})
+
+dat <- readRDS("../input/issp_pooled.rds")
+if (!"z_edad" %in% names(dat)) dat$z_edad <- as.numeric(scale(dat$edad))
+
+wmean <- function(x, w){ ok <- !is.na(x) & !is.na(w); sum(x[ok]*w[ok])/sum(w[ok]) }
+
+md <- dat %>% dplyr::filter(ola %in% c(2009, 2019)) %>%
+  mutate(just_salud_f = factor(just_salud, ordered = TRUE),
+         just_educ_f  = factor(just_educ , ordered = TRUE),
+         mujer = factor(mujer))
+
+stars <- function(p) ifelse(p < .001, "***", ifelse(p < .01, "**", ifelse(p < .05, "*", ifelse(p < .1, ".", ""))))
+tidy_olr <- function(m){
+  s <- summary(m)$coefficients
+  est <- s[,1]; se <- s[,2]; z <- est/se; p <- 2*pnorm(-abs(z))
+  data.frame(term = rownames(s), OR = exp(est), coef = est, se = se, p = p,
+             sig = stars(p), row.names = NULL)
+}
+
+fit_pair <- function(dvf){
+  d <- md %>% dplyr::filter(!is.na(.data[[dvf]]), !is.na(z_merit_desc), !is.na(z_particular),
+                             !is.na(z_edad), !is.na(z_educ), !is.na(z_relig), !is.na(mujer), !is.na(cohorte))
+  des <- svydesign(ids = ~1, weights = ~weight, data = d)
+  f0 <- as.formula(paste(dvf, "~ z_merit_desc + z_particular + z_edad + z_educ + z_relig + mujer + cohorte + ola_f"))
+  f1 <- as.formula(paste(dvf, "~ z_merit_desc*cohorte + z_particular + z_edad + z_educ + z_relig + mujer + ola_f"))
+  list(m0 = svyolr(f0, design = des), m1 = svyolr(f1, design = des), N = nrow(d))
+}
+S <- fit_pair("just_salud_f")
+E <- fit_pair("just_educ_f")
+
+kbl_slide <- function(df, ...) {
+  kable(df, ..., booktabs = TRUE) %>%
+    kable_styling(full_width = FALSE, font_size = 15,
+                  bootstrap_options = c("striped", "hover"))
+}
+```
+
+class: title-slide, center, middle
+
+.logos[
+![](images/facso.png)
+![](images/mcs.png)
+]
+
+# Meritocracia, cohortes y justificación de la desigualdad en salud y educación en Chile, 1999–2019
+
+### Defensa de tesis — Magíster en Ciencias Sociales, mención Sociología de la Modernización
+
+**Neyem Cares**
+
+Profesor guía: Juan Carlos Castillo · Facultad de Ciencias Sociales, Universidad de Chile
+
+---
+
+## Agenda
+
+1. Motivación y problema de investigación
+2. Marco conceptual: meritocracia, particularismo y cohortes
+3. Hipótesis
+4. Datos y método
+5. Resultados descriptivos
+6. Resultados: modelos y mecanismo cohorte × meritocracia
+7. Síntesis de hipótesis
+8. Contribuciones, limitaciones y agenda futura
+
+---
+
+## La paradoja chilena
+
+Chile combina dos rasgos que rara vez coexisten con esta intensidad:
+
+.hyp-box[
+**Desigualdad de ingresos persistentemente alta** — el país más desigual de la OCDE (Gini ≈ 0,45–0,55 según fuente y corrección; Flores et al., 2020)
+]
+
+.hyp-box[
+**Fuerte adhesión cultural al mérito individual** como explicación legítima del éxito (Castillo et al., 2025b)
+]
+
+Además, salud y educación están organizadas en Chile bajo una **lógica de mercado** desde las reformas de la dictadura (ISAPRE 1981, municipalización educativa 1980) — preguntar si es justo que el ingreso compre mejor salud o educación no es hipotético: describe la experiencia cotidiana.
+
+---
+
+## Pregunta de investigación
+
+> ¿En qué medida el efecto de los discursos meritocráticos sobre la justificación de la desigualdad en salud y educación varía según la **cohorte de nacimiento**, y cómo se transforma esa variación entre **1999, 2009 y 2019**?
+
+--
+
+La literatura documenta bien la función legitimadora de la meritocracia (Sandel, 2020; Mijs, 2021), pero rara vez pregunta si esa función es **generacionalmente uniforme** — pese a que Chile ofrece cohortes con experiencias formativas radicalmente distintas (desarrollismo, dictadura, transición, neoliberalismo consolidado).
+
+---
+
+## Marco conceptual (I): meritocracia como legitimación
+
+- La meritocracia (Young, 1958) nació como advertencia satírica, no como ideal.
+- Si el éxito se atribuye a esfuerzo y talento, la desigualdad resultante aparece **merecida y justa** (Sandel, 2020).
+- **Paradoja de Mijs (2021):** a mayor desigualdad observada, mayor —no menor— adhesión al relato meritocrático.
+- Se distinguen dos planos que **no son opuestos** de un mismo continuo:
+
+| Dimensión | Pregunta que responde |
+|---|---|
+| **Meritocracia descriptiva** | ¿El esfuerzo y la educación determinan quién sale adelante? |
+| **Particularismo** | ¿Los contactos, la cuna, la corrupción determinan quién sale adelante? |
+
+Ambas pueden **coexistir** en un mismo individuo (Kluegel & Smith, 1981; Reynolds & Xian, 2014).
+
+---
+
+## Marco conceptual (II): cohortes y socialización
+
+- **Hipótesis de los años impresionables** (Alwin & Krosnick, 1991): las disposiciones se forman en la adultez temprana y se estabilizan.
+- Mannheim (1936): compartir una ubicación generacional deja una impronta duradera.
+- Chile ofrece cohortes con horizontes radicalmente distintos:
+
+```{r tab-cohortes}
+coh_def <- data.frame(
+  Cohorte = c("Desarrollista", "Dictadura", "Transición", "Neoliberal"),
+  `Año de nacimiento` = c("≤ 1958", "1959–1973", "1974–1990", "1991+"),
+  `Contexto de socialización` = c(
+    "Estado de compromiso / ISI, previo al quiebre democrático",
+    "Régimen militar y reformas neoliberales fundacionales",
+    "Juventud durante la recuperación democrática",
+    "Socialización plena en democracia de mercado"),
+  check.names = FALSE
+)
+kbl_slide(coh_def)
+```
+
+Problema de identificación **edad–período–cohorte**: con 3 olas no es separable formalmente (Yang & Land, 2016) — la edad se controla, pero persiste confusión residual.
+
+---
+
+## Hipótesis
+
+.hyp-box[**H1** — A mayor adhesión meritocrática (descriptiva), mayor justificación de la desigualdad en salud y educación.]
+
+.hyp-box[**H2** — El particularismo se asocia *positivamente* con la justificación, vía naturalización del orden jerárquico.]
+
+.hyp-box[**H3** — El efecto de la meritocracia descriptiva varía según la cohorte de nacimiento, siendo más intenso en las cohortes socializadas bajo el neoliberalismo.]
+
+.hyp-box[**H4** — Ese efecto moderador de la cohorte es más pronunciado en salud que en educación.]
+
+---
+
+## Datos
+
+- Módulo **"Social Inequality"**, *International Social Survey Programme* (ISSP), Chile: **1999, 2009, 2019** (archivo GESIS, estudios ZA3430 / ZA5400 / ZA7600).
+- Ponderado por el factor de expansión (`WEIGHT`); modelos estimados con `survey::svydesign()`.
+
+```{r tab-n}
+n_ola <- data.frame(Ola = c(1999, 2009, 2019),
+                     `N (Chile)` = c(1503, 1505, 1374), check.names = FALSE)
+kbl_slide(n_ola)
+```
+
+- Diseño de **dos niveles**: (1) tendencia descriptiva 1999→2019; (2) mecanismo cohorte × meritocracia, restringido a **2009–2019** (la batería de atribuciones no existe en 1999).
+
+---
+
+## Variables
+
+**Variables dependientes** (invertidas 6−x; mayor = más justificación): ¿es justo que quienes tienen más ingresos compren mejor **salud** / mejor **educación**? (escala 1–5, r ≈ 0,79 entre ambas)
+
+**Predictores** (estandarizados, 1–5 invertidos):
+- **Meritocracia descriptiva** — promedio educación propia + trabajo duro *(2 ítems; α baja: r=0,18 en 2009, 0,33 en 2019 — limitación reconocida)*
+- **Particularismo** — promedio de 6 ítems adscriptivos (raza, sexo, religión, coimas, contactos, origen familiar) *(α = 0,79–0,82, buena fiabilidad)*
+
+**Controles**: edad, escolaridad (años), sexo, religiosidad, cohorte, ola.
+
+**Método**: regresión logística ordinal ponderada (`svyolr`), reportada en *odds ratios*.
+
+---
+
+class: inverse, center, middle
+
+# Resultados
+
+---
+
+## Tendencia 1999–2019: una "U"
+
+```{r fig-trend, fig.height=4.3, fig.width=7.5}
+df_fig <- dat %>% group_by(ola) %>% summarise(
+  Salud = wmean(just_salud, weight),
+  Educación = wmean(just_educ, weight), .groups = "drop") %>%
+  pivot_longer(-ola, names_to = "Esfera", values_to = "media")
+
+ggplot(df_fig, aes(ola, media, color = Esfera, group = Esfera)) +
+  geom_line(linewidth = 1.1) + geom_point(size = 3) +
+  scale_x_continuous(breaks = c(1999, 2009, 2019)) +
+  scale_color_manual(values = c("Salud" = "#1b6ca8", "Educación" = "#c44601")) +
+  labs(x = NULL, y = "Justificación (1–5)", color = NULL) +
+  theme_minimal(base_size = 16) + theme(legend.position = "bottom")
+```
+
+Cae entre 1999 (≈2,7) y 2009 (≈2,3); repunta hacia 2019 (≈2,5), en el umbral del estallido social. Salud y educación son casi indistinguibles en nivel — el interés está en **qué las predice**, no en cuánto se justifican.
+
+---
+
+## Justificación por cohorte y ola
+
+```{r tab-coh-vd}
+coh_vd <- dat %>% filter(ola %in% c(2009, 2019)) %>%
+  group_by(Ola = ola, Cohorte = cohorte) %>%
+  summarise(n = n(),
+            `Just. salud` = wmean(just_salud, weight),
+            `Just. educación` = wmean(just_educ, weight), .groups = "drop")
+kbl_slide(coh_vd, digits = 2)
+```
+
+En **2009**, la justificación decrece monotónicamente hacia las cohortes más jóvenes; en **2019** el gradiente se **aplana e invierte parcialmente**. El patrón generacional no es fijo: se transforma entre olas.
+
+---
+
+## Modelo base (2009–2019)
+
+```{r tab-base}
+lab <- c(z_merit_desc = "Meritocracia descriptiva (z)",
+         z_particular = "Particularismo (z)",
+         z_edad = "Edad (z)",
+         z_educ = "Escolaridad, años (z)",
+         z_relig = "Religiosidad (z)",
+         mujer1 = "Mujer",
+         cohorteDictadura = "Cohorte: Dictadura",
+         cohorteTransicion = "Cohorte: Transición",
+         cohorteNeoliberal = "Cohorte: Neoliberal",
+         ola_f2009 = "Ola 2009 (ref. 2019)")
+fmt <- function(m){
+  t <- tidy_olr(m); t <- t[t$term %in% names(lab), ]
+  data.frame(Predictor = lab[t$term], OR = sprintf("%.2f%s", t$OR, t$sig), row.names = NULL)
+}
+tab_base <- merge(fmt(S$m0), fmt(E$m0), by = "Predictor", suffixes = c(" salud", " educación"))
+tab_base <- tab_base[match(lab[names(lab) %in% tidy_olr(S$m0)$term], tab_base$Predictor), ]
+kbl_slide(tab_base, row.names = FALSE, col.names = c("Predictor", "OR (salud)", "OR (educación)"),
+          caption = sprintf("N≈%d (salud) / %d (educación). *** p<.001, ** p<.01, * p<.05, . p<.10", S$N, E$N))
+```
+
+**Particularismo** es el predictor más robusto (OR≈1,23–1,24; p<,001) en ambas esferas. La **meritocracia descriptiva** no es significativa como efecto principal — anticipa un efecto **condicional a la cohorte**.
+
+---
+
+## El giro contraintuitivo: particularismo (H2)
+
+Quienes perciben que **contactos, cuna o corrupción** determinan el éxito **no rechazan** la desigualdad — la **justifican más**.
+
+--
+
+Interpretación: no opera como impugnación normativa de la jerarquía, sino como **naturalización fatalista** de un orden percibido como inevitable.
+
+--
+
+**H2 recibe el apoyo más robusto de todo el estudio.**
+
+---
+
+## Interacción meritocracia descriptiva × cohorte
+
+```{r tab-int}
+int_terms <- c("z_merit_desc", "z_merit_desc:cohorteDictadura",
+               "z_merit_desc:cohorteTransicion", "z_merit_desc:cohorteNeoliberal")
+int_lab <- c(z_merit_desc = "Mérito descriptivo (ref.: Desarrollista)",
+             `z_merit_desc:cohorteDictadura` = "× Dictadura",
+             `z_merit_desc:cohorteTransicion` = "× Transición",
+             `z_merit_desc:cohorteNeoliberal` = "× Neoliberal")
+coef_col <- function(m){
+  t <- tidy_olr(m); rownames(t) <- t$term
+  sprintf("%.3f%s", t[int_terms, "coef"], t[int_terms, "sig"])
+}
+ti <- data.frame(Término = int_lab[int_terms],
+                 `Coef. salud` = coef_col(S$m1), `Coef. educación` = coef_col(E$m1),
+                 check.names = FALSE, row.names = NULL)
+kbl_slide(ti, row.names = FALSE)
+```
+
+En **salud**, el efecto de la meritocracia descriptiva **cambia de signo**: negativo en la cohorte desarrollista (−0,21; p<,01), positivo en dictadura (+0,24; p<,05). En **educación**, misma dirección pero **sin** significancia — asimetría sectorial (H4).
+
+---
+
+## La inversión, visualizada
+
+```{r fig-int, fig.height=4.3, fig.width=7.5}
+slopes_by_cohort <- function(m){
+  b <- coef(m); V <- vcov(m)
+  cohs <- c("Desarrollista", "Dictadura", "Transicion", "Neoliberal")
+  ix_main <- "z_merit_desc"
+  out <- lapply(cohs, function(k){
+    if (k == "Desarrollista") { est <- b[ix_main]; va <- V[ix_main, ix_main] }
+    else { ix <- paste0("z_merit_desc:cohorte", k)
+      est <- b[ix_main] + b[ix]; va <- V[ix_main, ix_main] + V[ix, ix] + 2*V[ix_main, ix] }
+    data.frame(cohorte = k, est = est, se = sqrt(va)) })
+  do.call(rbind, out)
+}
+sl <- slopes_by_cohort(S$m1)
+sl$cohorte <- factor(sl$cohorte, levels = c("Desarrollista", "Dictadura", "Transicion", "Neoliberal"),
+                      labels = c("Desarrollista", "Dictadura", "Transición", "Neoliberal"))
+ggplot(sl, aes(cohorte, est)) +
+  geom_hline(yintercept = 0, linetype = 2, color = "grey50") +
+  geom_errorbar(aes(ymin = est - 1.96*se, ymax = est + 1.96*se), width = .15, color = "#1b6ca8", linewidth=0.9) +
+  geom_point(size = 3.2, color = "#1b6ca8") +
+  labs(x = NULL, y = "Pendiente de mérito descriptivo (logit)") +
+  theme_minimal(base_size = 16)
+```
+
+La pendiente cruza el cero entre la cohorte más antigua y las socializadas bajo el régimen militar y la transición — **el golpe de 1973 como punto de inflexión generacional**.
+
+---
+
+## Traducido a probabilidades (salud)
+
+```{r fig-pred-prob, fig.height=4.2, fig.width=7.5}
+b_s <- coef(S$m1); z_s <- S$m1$zeta
+pred_p <- function(z_merit, cohorte) {
+  xb <- b_s["z_merit_desc"] * z_merit
+  if (cohorte == "Dictadura")  xb <- xb + b_s["cohorteDictadura"]  + b_s["z_merit_desc:cohorteDictadura"]  * z_merit
+  if (cohorte == "Transicion") xb <- xb + b_s["cohorteTransicion"] + b_s["z_merit_desc:cohorteTransicion"] * z_merit
+  if (cohorte == "Neoliberal") xb <- xb + b_s["cohorteNeoliberal"] + b_s["z_merit_desc:cohorteNeoliberal"] * z_merit
+  1 - plogis(z_s["3|4"] - xb)
+}
+merit_seq <- seq(-1.5, 1.5, by = 0.1)
+cohs_ord <- c("Desarrollista", "Dictadura", "Transicion", "Neoliberal")
+df_pp <- do.call(rbind, lapply(cohs_ord, function(coh)
+  data.frame(z_merit_desc = merit_seq, cohorte = coh, prob = sapply(merit_seq, pred_p, cohorte = coh))))
+df_pp$cohorte <- factor(df_pp$cohorte, levels = cohs_ord,
+                         labels = c("Desarrollista", "Dictadura", "Transición", "Neoliberal"))
+ggplot(df_pp, aes(z_merit_desc, prob, color = cohorte, linetype = cohorte)) +
+  geom_line(linewidth = 1.1) +
+  scale_color_manual(values = c("#2166ac", "#d6604d", "#4dac26", "#762a83")) +
+  labs(x = "Meritocracia descriptiva (z)", y = "P(justificación salud ≥ 4)", color = "Cohorte", linetype = "Cohorte") +
+  theme_minimal(base_size = 16) + theme(legend.position = "bottom")
+```
+
+Desarrollista: −1→+1 DE reduce ~4 puntos porcentuales la prob. de alta justificación. Dictadura: la misma variación la **aumenta** ~3 puntos.
+
+---
+
+## Síntesis de hipótesis
+
+```{r tab-sintesis}
+tab_h <- data.frame(
+  H = c("H1", "H2", "H3", "H4"),
+  Evidencia = c(
+    "Efecto principal no signif.; sí al interactuar con cohorte",
+    "OR≈1,23–1,24; p<,001 en ambas esferas, todos los modelos",
+    "Cambia de signo: desarrollista (−) vs. dictadura (+, p<,05, salud)",
+    "Interacción signif. en salud (p<,05); no en educación"
+  ),
+  Soporte = c("Parcial", "Robusto", "Parcial", "Sí"),
+  check.names = FALSE
+)
+kbl_slide(tab_h, row.names = FALSE)
+```
+
+**Lectura integrada:** la justificación se explica robustamente por particularismo y escolaridad; la meritocracia descriptiva opera como mecanismo **dependiente de la cohorte**, con el golpe de 1973 como quiebre generacional.
+
+---
+
+## Contribuciones
+
+1. **Sustantiva** — el efecto legitimador de la meritocracia descriptiva no es uniforme: depende del contexto histórico de socialización y de la esfera de bienestar.
+
+2. **Conceptual** — meritocracia descriptiva y particularismo son dimensiones **separadas**, no polos de un continuo; su coexistencia produce el hallazgo contraintuitivo de H2.
+
+3. **Metodológica** — diseño de dos niveles (tendencia en 3 olas / mecanismo en 2) que no reclama más de lo que tres mediciones transversales permiten.
+
+---
+
+## Limitaciones
+
+- **Índice de meritocracia descriptiva**: solo 2 ítems, consistencia interna baja (r=0,18–0,33) — atenúa y desestabiliza potencialmente sus coeficientes.
+- **Identificación APC**: edad, período y cohorte no son separables linealmente con 3 olas; diferencias entre cohortes = diferencias netas con confusión residual.
+- **Tamaño muestral desigual**: cohorte neoliberal con apenas n=32 en 2009.
+- **Escolaridad como años continuos**: supone efecto lineal constante entre niveles educativos, supuesto sociológicamente cuestionable.
+
+---
+
+## Agenda futura
+
+1. Refinar la medición de meritocracia descriptiva con baterías más extensas y consistentes.
+2. Extender el diseño a más olas / fuentes longitudinales para separar edad–período–cohorte con mayor rigor.
+3. Análisis comparado en otros países de América Latina con trayectorias institucionales distintas.
+
+**Robustez:** los hallazgos centrales se sostienen con y sin ponderador, con y sin controles de alta no-respuesta (posición política), y con la edad como covariable continua.
+
+---
+
+class: inverse, center, middle
+
+# Gracias
+
+### Preguntas y comentarios
+
+Neyem Cares · Profesor guía: Juan Carlos Castillo
+
+---
+
+class: inverse, center, middle
+
+# Slides de respaldo
+
+### (para preguntas del comité)
+
+---
+
+## Respaldo — distribución muestral por cohorte
+
+```{r tab-dist-cohorte}
+dist_coh <- dat %>% count(Ola = ola, Cohorte = cohorte, name = "n (sin ponderar)") %>%
+  tidyr::pivot_wider(names_from = Ola, values_from = `n (sin ponderar)`)
+kbl_slide(dist_coh)
+```
+
+La cohorte **neoliberal** tiene apenas **n=32** en 2009 (recién n=211 en 2019) — limita el poder estadístico de las interacciones que la involucran y explica por qué sus estimaciones son las más inciertas de todas (ver figura de pendientes).
+
+---
+
+## Respaldo — identificación edad–período–cohorte (APC)
+
+.hyp-box[
+Dado que **edad = período − cohorte**, los tres componentes **no son separables linealmente** con solo tres olas (Yang & Land, 2016).
+]
+
+- Este estudio **no** estima un modelo APC formal.
+- La **edad** se incluye como covariable continua para controlar efectos de ciclo de vida — pero con cohorte categórica y ola como factor en el mismo modelo, la separación completa de los tres componentes sigue siendo imposible.
+- Las diferencias entre cohortes deben leerse como **diferencias netas**, con confusión residual entre efectos generacionales y efectos de período.
+- Literatura dividida: Bell & Jones (2014) advierten contra soluciones puramente estadísticas; Reither et al. (2015) defienden que, con fundamentos teóricos sólidos, el análisis sigue siendo viable.
+
+---
+
+## Respaldo — robustez de las estimaciones
+
+Los coeficientes centrales (interacción meritocracia descriptiva × cohorte Dictadura, particularismo, escolaridad) se sostienen frente a especificaciones alternativas:
+
+| Chequeo | Resultado |
+|---|---|
+| Con **edad** como covariable continua | Interacción salud×Dictadura se mantiene (p<,05) |
+| Con imputación de **posición política** (media + *missing dummy*) | Sin cambios sustantivos; N se conserva completa |
+| **Sin** factor de ponderación | Resultados cualitativamente equivalentes |
+| VD como **continua** (en vez de ordinal) | Robustez adicional reportada en el documento |
+
+**Valores perdidos:** códigos de no-respuesta armonizados a NA en las 3 olas (1999: 8/9; 2009–2019: negativos); estimación por eliminación por lista (*listwise*).
+
+---
+
+## Respaldo — por qué escolaridad como años continuos
+
+- Se opera la escolaridad como **años continuos** por disponibilidad del dato armonizado entre las tres olas y comparabilidad con la literatura.
+- Supuesto cuestionable: un año adicional **no** tiene el mismo valor social en cualquier tramo (básica vs. media vs. superior).
+- Se reconoce como limitación y se deja como agenda: reoperacionalizar por **nivel educativo alcanzado** en estudios futuros.
+
+---
+
+## Respaldo — por qué salud y no educación (H4)
+
+- La **salud** remite a la urgencia vital y al riesgo inmediato → activa de modo más directo las disposiciones generacionales al evaluar su legitimidad.
+- La **educación** ha sido objeto de un debate público más consolidado y transversal en Chile desde el ciclo de movilizaciones de 2006 ("revolución pingüina") en adelante → tiende a homogeneizar los juicios entre cohortes, independientemente de su origen generacional.
+- Los coeficientes de interacción en educación **apuntan en la misma dirección** que en salud, solo que no alcanzan significancia — no es una ausencia de patrón, sino un patrón más débil/homogéneo.
