@@ -64,10 +64,12 @@ thead tr { background-color: var(--blue); color: white; }
 .footnote-src { position: absolute; bottom: 0.6em; right: 1.2em; font-size: 0.55em; color: #888; }
 
 .hyp-box {
+  display: block;
   border-left: 5px solid var(--orange);
   background: #f4f7fa;
   padding: 0.5em 1em;
   margin: 0.5em 0;
+  line-height: 1.35;
 }
 
 .logos img { height: 60px; margin: 0 12px; vertical-align: middle; }
