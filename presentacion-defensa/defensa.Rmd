@@ -91,6 +91,12 @@ Facultad de Ciencias Sociales, Universidad de Chile
 
 ---
 
+class: inverse, center, middle
+
+# 1 · Motivación y problema de investigación
+
+---
+
 ## La paradoja chilena
 
 Chile combina dos rasgos que rara vez coexisten con esta intensidad:
@@ -107,6 +113,26 @@ Además, salud y educación están organizadas en Chile bajo una **lógica de me
 
 ---
 
+## La justificación de la desigualdad: el objeto de estudio
+
+Por qué las personas consideran **legítima** la desigualdad ocupa un lugar central en la sociología de la estratificación.
+
+- Aquí se opera como **preferencias por la justicia de mercado**: el grado en que se acepta que la capacidad de pago gobierne el acceso a bienes socialmente valorados (Lindh, 2017; Lindh & McCall, 2023).
+- Salud y educación no son mercancías ordinarias — se conciben como **derechos sociales** (Satz, 2010), y los juicios morales sobre el mercado varían según el tipo de bien en cuestión (Fourcade & Healy, 2007).
+- En Chile, evaluar si es justo que el ingreso compre mejor salud o educación no es un ejercicio hipotético: es juzgar un principio que ya organiza la vida cotidiana.
+
+**Esta es la variable que este estudio busca explicar** — no la desigualdad en sí, sino su legitimación.
+
+---
+
+## La meritocracia como puente
+
+- Cuando el éxito se atribuye al esfuerzo y el talento individuales, la desigualdad resultante aparece como **merecida y, por tanto, justa** (Sandel, 2020; Mijs, 2021).
+- La evidencia ya muestra que la adhesión meritocrática se asocia con mayor justificación de la desigualdad en salud y educación en Chile (Castillo et al., 2025a).
+- Pero esa evidencia trata a la población como generacionalmente uniforme — **¿es igual esa fuerza legitimadora para todas las cohortes?**
+
+---
+
 ## Pregunta de investigación
 
 > ¿En qué medida el efecto de los discursos meritocráticos sobre la justificación de la desigualdad en salud y educación varía según la **cohorte de nacimiento**, y cómo se transforma esa variación entre **1999, 2009 y 2019**?
@@ -114,6 +140,12 @@ Además, salud y educación están organizadas en Chile bajo una **lógica de me
 --
 
 La literatura documenta bien la función legitimadora de la meritocracia (Sandel, 2020; Mijs, 2021), pero rara vez pregunta si esa función es **generacionalmente uniforme** — pese a que Chile ofrece cohortes con experiencias formativas radicalmente distintas (desarrollismo, dictadura, transición, neoliberalismo consolidado).
+
+---
+
+class: inverse, center, middle
+
+# 2 · Marco conceptual: meritocracia, particularismo y cohortes
 
 ---
 
@@ -157,6 +189,21 @@ Problema de identificación **edad–período–cohorte**: con 3 olas no es sepa
 
 ---
 
+## Investigaciones previas y el vacío que aborda este estudio
+
+- La función legitimadora de la meritocracia está bien documentada: en el terreno normativo (Sandel, 2020), en una paradoja empírica transnacional (Mijs, 2021), experimentalmente (Batruch et al., 2023), y específicamente para Chile (Castillo et al., 2025a, 2025b).
+- Pero son **escasos los estudios** que examinan cómo ese efecto legitimador **varía según la cohorte de nacimiento**, y cómo esa variación se transforma en el tiempo, en **ámbitos sectoriales específicos**.
+
+**Contribución:** articular tres dimensiones que la literatura ha tratado por separado —la función legitimadora de la meritocracia, su coexistencia con el particularismo, y la variación por cohorte de socialización— en dos esferas concretas (salud y educación) y a lo largo de veinte años.
+
+---
+
+class: inverse, center, middle
+
+# 3 · Hipótesis
+
+---
+
 ## Hipótesis
 
 .hyp-box[**H1** — A mayor adhesión meritocrática (descriptiva), mayor justificación de la desigualdad en salud y educación.]
@@ -166,6 +213,12 @@ Problema de identificación **edad–período–cohorte**: con 3 olas no es sepa
 .hyp-box[**H3** — El efecto de la meritocracia descriptiva varía según la cohorte de nacimiento, siendo más intenso en las cohortes socializadas bajo el neoliberalismo.]
 
 .hyp-box[**H4** — Ese efecto moderador de la cohorte es más pronunciado en salud que en educación.]
+
+---
+
+class: inverse, center, middle
+
+# 4 · Datos y método
 
 ---
 
@@ -200,13 +253,13 @@ kbl_slide(n_ola)
 
 class: inverse, center, middle
 
-# Resultados
+# 5 · Resultados descriptivos
 
 ---
 
 ## Tendencia 1999–2019: una "U"
 
-```{r fig-trend, fig.height=4.3, fig.width=7.5}
+```{r fig-trend, fig.height=3.0, fig.width=7.2}
 df_fig <- dat %>% group_by(ola) %>% summarise(
   Salud = wmean(just_salud, weight),
   Educación = wmean(just_educ, weight), .groups = "drop") %>%
@@ -217,7 +270,8 @@ ggplot(df_fig, aes(ola, media, color = Esfera, group = Esfera)) +
   scale_x_continuous(breaks = c(1999, 2009, 2019)) +
   scale_color_manual(values = c("Salud" = "#1b6ca8", "Educación" = "#c44601")) +
   labs(x = NULL, y = "Justificación (1–5)", color = NULL) +
-  theme_minimal(base_size = 16) + theme(legend.position = "bottom")
+  theme_minimal(base_size = 13) + theme(legend.position = "bottom",
+    plot.margin = margin(4, 12, 4, 4))
 ```
 
 Cae entre 1999 (≈2,7) y 2009 (≈2,3); repunta hacia 2019 (≈2,5), en el umbral del estallido social. Salud y educación son casi indistinguibles en nivel — el interés está en **qué las predice**, no en cuánto se justifican.
@@ -236,6 +290,12 @@ kbl_slide(coh_vd, digits = 2)
 ```
 
 En **2009**, la justificación decrece monotónicamente hacia las cohortes más jóvenes; en **2019** el gradiente se **aplana e invierte parcialmente**. El patrón generacional no es fijo: se transforma entre olas.
+
+---
+
+class: inverse, center, middle
+
+# 6 · Resultados: modelos y mecanismo cohorte × meritocracia
 
 ---
 
@@ -305,7 +365,7 @@ En **salud**, el efecto de la meritocracia descriptiva **cambia de signo**: nega
 
 ## La inversión, visualizada
 
-```{r fig-int, fig.height=4.3, fig.width=7.5}
+```{r fig-int, fig.height=3.0, fig.width=7.2}
 slopes_by_cohort <- function(m){
   b <- coef(m); V <- vcov(m)
   cohs <- c("Desarrollista", "Dictadura", "Transicion", "Neoliberal")
@@ -325,7 +385,7 @@ ggplot(sl, aes(cohorte, est)) +
   geom_errorbar(aes(ymin = est - 1.96*se, ymax = est + 1.96*se), width = .15, color = "#1b6ca8", linewidth=0.9) +
   geom_point(size = 3.2, color = "#1b6ca8") +
   labs(x = NULL, y = "Pendiente de mérito descriptivo (logit)") +
-  theme_minimal(base_size = 16)
+  theme_minimal(base_size = 13) + theme(plot.margin = margin(4, 12, 8, 4))
 ```
 
 La pendiente cruza el cero entre la cohorte más antigua y las socializadas bajo el régimen militar y la transición — **el golpe de 1973 como punto de inflexión generacional**.
@@ -334,7 +394,7 @@ La pendiente cruza el cero entre la cohorte más antigua y las socializadas bajo
 
 ## Traducido a probabilidades (salud)
 
-```{r fig-pred-prob, fig.height=4.2, fig.width=7.5}
+```{r fig-pred-prob, fig.height=3.0, fig.width=7.2}
 b_s <- coef(S$m1); z_s <- S$m1$zeta
 pred_p <- function(z_merit, cohorte) {
   xb <- b_s["z_merit_desc"] * z_merit
@@ -353,10 +413,17 @@ ggplot(df_pp, aes(z_merit_desc, prob, color = cohorte, linetype = cohorte)) +
   geom_line(linewidth = 1.1) +
   scale_color_manual(values = c("#2166ac", "#d6604d", "#4dac26", "#762a83")) +
   labs(x = "Meritocracia descriptiva (z)", y = "P(justificación salud ≥ 4)", color = "Cohorte", linetype = "Cohorte") +
-  theme_minimal(base_size = 16) + theme(legend.position = "bottom")
+  theme_minimal(base_size = 13) + theme(legend.position = "bottom",
+    plot.margin = margin(4, 12, 4, 4))
 ```
 
 Desarrollista: −1→+1 DE reduce ~4 puntos porcentuales la prob. de alta justificación. Dictadura: la misma variación la **aumenta** ~3 puntos.
+
+---
+
+class: inverse, center, middle
+
+# 7 · Síntesis de hipótesis
 
 ---
 
@@ -378,6 +445,12 @@ kbl_slide(tab_h, row.names = FALSE)
 ```
 
 **Lectura integrada:** la justificación se explica robustamente por particularismo y escolaridad; la meritocracia descriptiva opera como mecanismo **dependiente de la cohorte**, con el golpe de 1973 como quiebre generacional.
+
+---
+
+class: inverse, center, middle
+
+# 8 · Contribuciones, limitaciones y agenda futura
 
 ---
 
@@ -425,6 +498,63 @@ class: inverse, center, middle
 # Slides de respaldo
 
 ### (para preguntas del comité)
+
+---
+
+## Respaldo — fraseo exacto: variables dependientes y meritocracia
+
+Ítems del ISSP (wording original del cuestionario maestro; el levantamiento en Chile usa la traducción española equivalente). Escala original de 5 puntos, invertida en el análisis.
+
+```{r tab-wording-1}
+wording1 <- data.frame(
+  Constructo = c("Just. salud", "Just. educación", "Merit. normativa",
+                 "Merit. descriptiva — educación", "Merit. descriptiva — trabajo"),
+  `Ítem ISSP (original)` = c(
+    "Just or unjust that people with higher incomes can buy better health care?",
+    "Just or unjust that people with higher incomes can buy better education for their children?",
+    "Important for pay: the number of years spent in education and training?",
+    "Getting ahead: how important is having a good education yourself?",
+    "Getting ahead: how important is hard work?"),
+  `Traducción funcional` = c(
+    "¿Es justo o injusto que las personas con mayores ingresos puedan comprar mejor atención de salud?",
+    "¿Es justo o injusto que las personas con mayores ingresos puedan comprar mejor educación para sus hijos?",
+    "¿Qué tan importante debería ser, para fijar el sueldo de una persona, los años de educación y formación que tiene?",
+    "Para salir adelante en la vida, ¿qué tan importante es tener una buena educación?",
+    "Para salir adelante en la vida, ¿qué tan importante es el trabajo duro?"),
+  check.names = FALSE
+)
+kable(wording1, row.names = FALSE) %>%
+  kable_styling(full_width = FALSE, font_size = 12, bootstrap_options = c("striped"))
+```
+
+---
+
+## Respaldo — fraseo exacto: particularismo
+
+Los seis ítems que promedio para construir el índice de particularismo (todos bajo la misma pregunta-marco *"Getting ahead: how important is..."*):
+
+```{r tab-wording-2}
+wording2 <- data.frame(
+  Factor = c("Origen familiar", "Contactos políticos", "Coimas", "Raza", "Religión", "Sexo"),
+  `Ítem ISSP (original)` = c(
+    "...coming from a wealthy family?",
+    "...having political connections?",
+    "...giving bribes?",
+    "...a person's race?",
+    "...a person's religion?",
+    "...being born a man or a woman?"),
+  `Traducción funcional` = c(
+    "Provenir de una familia acomodada",
+    "Tener contactos políticos",
+    "Dar coimas/sobornos",
+    "La raza de la persona",
+    "La religión de la persona",
+    "Haber nacido hombre o mujer"),
+  check.names = FALSE
+)
+kable(wording2, row.names = FALSE) %>%
+  kable_styling(full_width = FALSE, font_size = 13, bootstrap_options = c("striped"))
+```
 
 ---
 
