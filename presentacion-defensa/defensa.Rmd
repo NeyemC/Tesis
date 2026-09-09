@@ -343,23 +343,46 @@ Interpretación: no opera como impugnación normativa de la jerarquía, sino com
 ## Interacción meritocracia descriptiva × cohorte
 
 ```{r tab-int}
-int_terms <- c("z_merit_desc", "z_merit_desc:cohorteDictadura",
-               "z_merit_desc:cohorteTransicion", "z_merit_desc:cohorteNeoliberal")
-int_lab <- c(z_merit_desc = "Mérito descriptivo (ref.: Desarrollista)",
-             `z_merit_desc:cohorteDictadura` = "× Dictadura",
-             `z_merit_desc:cohorteTransicion` = "× Transición",
-             `z_merit_desc:cohorteNeoliberal` = "× Neoliberal")
-coef_col <- function(m){
+full_terms <- c(
+  "z_merit_desc",
+  "z_merit_desc:cohorteDictadura", "z_merit_desc:cohorteTransicion", "z_merit_desc:cohorteNeoliberal",
+  "cohorteDictadura", "cohorteTransicion", "cohorteNeoliberal",
+  "z_particular", "z_edad", "z_educ", "z_relig", "mujer1", "ola_f2009",
+  "1|2", "2|3", "3|4", "4|5")
+full_lab <- c(
+  z_merit_desc = "Mérito descriptivo (ref.: Desarrollista)",
+  `z_merit_desc:cohorteDictadura` = "× Dictadura",
+  `z_merit_desc:cohorteTransicion` = "× Transición",
+  `z_merit_desc:cohorteNeoliberal` = "× Neoliberal",
+  cohorteDictadura = "Cohorte: Dictadura (nivel)",
+  cohorteTransicion = "Cohorte: Transición (nivel)",
+  cohorteNeoliberal = "Cohorte: Neoliberal (nivel)",
+  z_particular = "Particularismo (z)",
+  z_edad = "Edad (z)",
+  z_educ = "Escolaridad (z)",
+  z_relig = "Religiosidad (z)",
+  mujer1 = "Mujer",
+  ola_f2009 = "Ola 2009 (ref. 2019)",
+  `1|2` = "Corte 1/2",
+  `2|3` = "Corte 2/3",
+  `3|4` = "Corte 3/4",
+  `4|5` = "Corte 4/5")
+coef_col_full <- function(m){
   t <- tidy_olr(m); rownames(t) <- t$term
-  sprintf("%.3f%s", t[int_terms, "coef"], t[int_terms, "sig"])
+  sprintf("%.3f%s", t[full_terms, "coef"], t[full_terms, "sig"])
 }
-ti <- data.frame(Término = int_lab[int_terms],
-                 `Coef. salud` = coef_col(S$m1), `Coef. educación` = coef_col(E$m1),
+ti <- data.frame(Término = full_lab[full_terms],
+                 `Coef. salud` = coef_col_full(S$m1), `Coef. educación` = coef_col_full(E$m1),
                  check.names = FALSE, row.names = NULL)
-kbl_slide(ti, row.names = FALSE)
+kable(ti, row.names = FALSE, booktabs = TRUE) %>%
+  kable_styling(full_width = FALSE, font_size = 11, bootstrap_options = c("striped", "hover")) %>%
+  row_spec(0, bold = TRUE) %>%
+  row_spec(4, extra_css = "border-bottom: 1px solid #999;") %>%
+  row_spec(7, extra_css = "border-bottom: 1px solid #999;") %>%
+  row_spec(13, extra_css = "border-bottom: 1px solid #999;")
 ```
 
-En **salud**, el efecto de la meritocracia descriptiva **cambia de signo**: negativo en la cohorte desarrollista (−0,21; p<,01), positivo en dictadura (+0,24; p<,05). En **educación**, misma dirección pero **sin** significancia — asimetría sectorial (H4).
+Coeficientes logit completos del modelo con interacción — no solo los términos de mérito descriptivo. Ningún efecto de **nivel** de cohorte es significativo: toda la variación está en la **pendiente**.
 
 ---
 
